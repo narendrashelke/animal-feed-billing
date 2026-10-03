@@ -1,0 +1,526 @@
+
+/* ============================================
+   PRODUCTS PAGE
+   ============================================ */
+
+.products-page {
+  padding: 30px;
+  max-width: 1400px;
+  margin: 0 auto;
+  font-family: Arial, Helvetica, sans-serif;
+  color: #1f2937;
+  background: #f8fafc;
+  min-height: 100vh;
+  box-sizing: border-box;
+}
+
+/* ============================================
+   PAGE HEADER
+   ============================================ */
+
+.page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 20px;
+  margin-bottom: 25px;
+}
+
+.page-header h1 {
+  margin: 0 0 6px;
+  font-size: 30px;
+  font-weight: 700;
+  color: #111827;
+}
+
+.page-header p {
+  margin: 0;
+  color: #6b7280;
+  font-size: 15px;
+}
+
+/* ============================================
+   BUTTONS
+   ============================================ */
+
+.add-btn,
+.stock-in-btn,
+.adjust-btn,
+.history-btn,
+.cancel-btn,
+.save-btn {
+  border: none;
+  border-radius: 7px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+
+.add-btn {
+  background: #2563eb;
+  color: white;
+  padding: 12px 20px;
+  font-size: 14px;
+  border-radius: 8px;
+  box-shadow: 0 3px 8px rgba(37, 99, 235, 0.2);
+}
+
+.add-btn:hover {
+  background: #1d4ed8;
+  transform: translateY(-1px);
+}
+
+.add-btn:active {
+  transform: translateY(0);
+}
+
+.stock-in-btn {
+  background: #16a34a;
+  color: white;
+  padding: 8px 11px;
+}
+
+.stock-in-btn:hover {
+  background: #15803d;
+}
+
+.adjust-btn {
+  background: #f59e0b;
+  color: #111827;
+  padding: 8px 11px;
+}
+
+.adjust-btn:hover {
+  background: #d97706;
+  color: white;
+}
+
+.history-btn {
+  background: #e5e7eb;
+  color: #374151;
+  padding: 8px 12px;
+}
+
+.history-btn:hover {
+  background: #d1d5db;
+}
+
+button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* ============================================
+   MESSAGES
+   ============================================ */
+
+.message,
+.error-message {
+  padding: 13px 16px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.message {
+  background: #ecfdf5;
+  color: #047857;
+  border: 1px solid #a7f3d0;
+}
+
+.error-message {
+  background: #fef2f2;
+  color: #b91c1c;
+  border: 1px solid #fecaca;
+}
+
+/* ============================================
+   FORM CARDS
+   ============================================ */
+
+.form-card {
+  background: white;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  padding: 25px;
+  margin-bottom: 25px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.06);
+}
+
+.inventory-form {
+  border-top: 4px solid #2563eb;
+}
+
+.form-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 15px;
+  margin-bottom: 25px;
+  padding-bottom: 18px;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.form-header h2 {
+  margin: 0 0 5px;
+  font-size: 21px;
+  color: #111827;
+}
+
+.form-header p {
+  margin: 0;
+  color: #6b7280;
+  font-size: 14px;
+}
+
+/* ============================================
+   CLOSE BUTTON
+   ============================================ */
+
+.close-btn {
+  width: 34px;
+  height: 34px;
+  flex-shrink: 0;
+  border: none;
+  border-radius: 7px;
+  background: #f3f4f6;
+  color: #4b5563;
+  font-size: 20px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: 0.2s ease;
+}
+
+.close-btn:hover {
+  background: #fee2e2;
+  color: #dc2626;
+}
+
+/* ============================================
+   FORM GRID
+   ============================================ */
+
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 18px 20px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.form-group label {
+  margin-bottom: 7px;
+  font-size: 13px;
+  font-weight: 600;
+  color: #374151;
+}
+
+.form-group input,
+.form-group select {
+  width: 100%;
+  height: 42px;
+  padding: 0 12px;
+  box-sizing: border-box;
+  border: 1px solid #d1d5db;
+  border-radius: 7px;
+  background: white;
+  color: #111827;
+  font-size: 14px;
+  outline: none;
+  transition: 0.2s ease;
+}
+
+.form-group input::placeholder {
+  color: #9ca3af;
+}
+
+.form-group input:focus,
+.form-group select:focus {
+  border-color: #2563eb;
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+}
+
+.form-group input:hover,
+.form-group select:hover {
+  border-color: #9ca3af;
+}
+
+.form-group input[readonly] {
+  background: #f3f4f6;
+  color: #4b5563;
+  cursor: default;
+}
+
+.form-group small {
+  margin-top: 6px;
+  color: #6b7280;
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+/* ============================================
+   FORM ACTIONS
+   ============================================ */
+
+.form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  margin-top: 25px;
+  padding-top: 20px;
+  border-top: 1px solid #e5e7eb;
+}
+
+.cancel-btn,
+.save-btn {
+  padding: 11px 20px;
+  font-size: 14px;
+}
+
+.cancel-btn {
+  background: #f3f4f6;
+  color: #374151;
+}
+
+.cancel-btn:hover {
+  background: #e5e7eb;
+}
+
+.save-btn {
+  background: #16a34a;
+  color: white;
+  box-shadow: 0 3px 8px rgba(22, 163, 74, 0.2);
+}
+
+.save-btn:hover {
+  background: #15803d;
+  transform: translateY(-1px);
+}
+
+/* ============================================
+   PRODUCT AND HISTORY CARDS
+   ============================================ */
+
+.product-card {
+  background: white;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+  margin-bottom: 25px;
+}
+
+.list-header {
+  padding: 22px 25px;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.list-header h2 {
+  margin: 0 0 5px;
+  font-size: 20px;
+  color: #111827;
+}
+
+.list-header p {
+  margin: 0;
+  font-size: 14px;
+  color: #6b7280;
+}
+
+.history-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 15px;
+}
+
+/* ============================================
+   TABLE
+   ============================================ */
+
+.table-container {
+  width: 100%;
+  overflow-x: auto;
+}
+
+table {
+  width: 100%;
+  min-width: 900px;
+  border-collapse: collapse;
+}
+
+thead {
+  background: #f8fafc;
+}
+
+th {
+  padding: 14px 16px;
+  text-align: left;
+  white-space: nowrap;
+  color: #4b5563;
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+td {
+  padding: 15px 16px;
+  border-bottom: 1px solid #f1f5f9;
+  color: #374151;
+  font-size: 14px;
+  white-space: nowrap;
+}
+
+tbody tr {
+  transition: background 0.15s ease;
+}
+
+tbody tr:hover {
+  background: #f8fafc;
+}
+
+tbody tr:last-child td {
+  border-bottom: none;
+}
+
+td strong {
+  color: #2563eb;
+  font-weight: 700;
+}
+
+/* ============================================
+   ACTION BUTTON CELL
+   ============================================ */
+
+.action-cell {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  min-height: 48px;
+}
+
+/* ============================================
+   STOCK STATUS
+   ============================================ */
+
+.low-stock {
+  color: #dc2626;
+  font-weight: 700;
+}
+
+/* ============================================
+   MOVEMENT BADGES
+   ============================================ */
+
+.movement-badge {
+  display: inline-block;
+  padding: 6px 10px;
+  border-radius: 20px;
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.stock-in-badge {
+  background: #dcfce7;
+  color: #166534;
+}
+
+.adjustment-badge {
+  background: #fef3c7;
+  color: #92400e;
+}
+
+.positive-change {
+  color: #15803d;
+  font-weight: 700;
+}
+
+.negative-change {
+  color: #dc2626;
+  font-weight: 700;
+}
+
+/* ============================================
+   EMPTY STATE
+   ============================================ */
+
+.empty {
+  text-align: center;
+  padding: 45px 20px !important;
+  color: #9ca3af;
+  font-size: 14px;
+}
+
+/* ============================================
+   RESPONSIVE DESIGN
+   ============================================ */
+
+@media (max-width: 800px) {
+  .products-page {
+    padding: 20px;
+  }
+
+  .page-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .add-btn {
+    width: 100%;
+  }
+
+  .form-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .form-actions {
+    flex-direction: column-reverse;
+  }
+
+  .cancel-btn,
+  .save-btn {
+    width: 100%;
+  }
+
+  .history-header {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .history-header .history-btn {
+    width: 100%;
+  }
+}
+
+@media (max-width: 500px) {
+  .products-page {
+    padding: 15px;
+  }
+
+  .page-header h1 {
+    font-size: 25px;
+  }
+
+  .form-card {
+    padding: 18px;
+  }
+
+  .list-header {
+    padding: 18px;
+  }
+
+  .action-cell {
+    flex-wrap: wrap;
+  }
+}

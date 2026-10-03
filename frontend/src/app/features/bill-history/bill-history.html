@@ -1,0 +1,560 @@
+
+<div class="history-page">
+
+  <!-- BILL HISTORY HEADER -->
+  <div class="page-header no-print">
+    <div>
+      <h1>Bill History</h1>
+      <p>View, print and manage saved bills</p>
+    </div>
+
+    <a routerLink="/sales" class="new-bill-btn">
+      + New Bill
+    </a>
+  </div>
+
+  <!-- MESSAGES -->
+  <div *ngIf="message" class="message success-message no-print">
+    {{ message }}
+  </div>
+
+  <div *ngIf="errorMessage" class="message error-message no-print">
+    {{ errorMessage }}
+  </div>
+
+  <!-- SEARCH -->
+  <div class="search-card no-print">
+    <div class="search-heading">
+      <div>
+        <h2>Saved Bills</h2>
+        <span>{{ filteredBills.length }} bill(s)</span>
+      </div>
+    </div>
+
+    <div class="search-row">
+      <input
+        type="text"
+        [(ngModel)]="searchText"
+        (input)="searchBills()"
+        placeholder="Search invoice, customer, mobile, date, status or payment mode">
+
+      <button
+        type="button"
+        class="clear-btn"
+        (click)="clearSearch()">
+        Clear
+      </button>
+
+      <button
+        type="button"
+        class="refresh-btn"
+        (click)="refreshBills()">
+        Refresh
+      </button>
+    </div>
+  </div>
+
+  <!-- LOADING -->
+  <div *ngIf="loading" class="loading no-print">
+    Loading bills...
+  </div>
+
+  <!-- BILL TABLE -->
+  <div *ngIf="!loading" class="table-card no-print">
+    <div class="table-wrapper">
+      <table>
+        <thead>
+          <tr>
+            <th>Sr.</th>
+            <th>Invoice No.</th>
+            <th>Date</th>
+            <th>Customer</th>
+            <th>Subtotal</th>
+            <th>GST</th>
+            <th>Total</th>
+            <th>Payment Mode</th>
+            <th>Status</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          <tr
+            *ngFor="let bill of filteredBills; let i = index">
+
+            <td>{{ i + 1 }}</td>
+
+            <td>
+              <strong>{{ getInvoiceNumber(bill) }}</strong>
+            </td>
+
+            <td>{{ formatDate(bill.invoice_date) }}</td>
+
+            <td>
+              <strong>
+                {{ bill.customer_name || 'Walk-in Customer' }}
+              </strong>
+              <small>{{ bill.customer_code || '' }}</small>
+            </td>
+
+            <td>₹{{ formatCurrency(bill.subtotal) }}</td>
+
+            <td>
+              ₹{{ formatCurrency(bill.gst_total || bill.total_tax) }}
+            </td>
+
+            <td>
+              <strong>
+                ₹{{ formatCurrency(bill.grand_total || bill.total_amount) }}
+              </strong>
+            </td>
+
+            <td>
+              {{ getPaymentMode(bill) }}
+            </td>
+
+            <td>
+              <span class="payment-badge">
+                {{ getPaymentStatus(bill) }}
+              </span>
+            </td>
+
+            <td>
+              <div class="action-buttons">
+                <button
+                  type="button"
+                  class="view-btn"
+                  (click)="viewBill(bill)">
+                  View
+                </button>
+
+                <button
+                  type="button"
+                  class="print-btn"
+                  (click)="printBill(bill)">
+                  Print
+                </button>
+
+                <button
+                  type="button"
+                  class="delete-btn"
+                  (click)="deleteBill(bill)">
+                  Delete
+                </button>
+              </div>
+            </td>
+          </tr>
+
+          <tr *ngIf="filteredBills.length === 0">
+            <td colspan="10" class="empty-row">
+              No bills found.
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- INVOICE PREVIEW -->
+  <div
+    *ngIf="showInvoice && selectedBill"
+    class="invoice-overlay">
+
+    <div class="invoice-container">
+
+      <!-- PREVIEW TOOLBAR -->
+      <div class="invoice-toolbar no-print">
+        <strong>Bill Preview</strong>
+
+        <div>
+          <a
+            *ngIf="(selectedBill.due_amount || 0) > 0"
+            [routerLink]="['/payments']"
+            [queryParams]="{ customer_id: selectedBill.customer_id }"
+            class="record-payment-btn"
+            style="background: #10b981; color: white; padding: 7px 14px; border-radius: 4px; text-decoration: none; font-size: 13px; font-weight: 600; margin-right: 8px; display: inline-block;">
+            💰 Record Payment
+          </a>
+
+          <button
+            type="button"
+            class="print-invoice-btn"
+            (click)="printSelectedInvoice()">
+            Print Invoice
+          </button>
+
+          <button
+            type="button"
+            class="close-invoice-btn"
+            (click)="closeInvoice()">
+            Close
+          </button>
+        </div>
+      </div>
+
+      <!-- A4 INVOICE -->
+      <div class="invoice-page">
+
+        <!-- COMPANY HEADER -->
+        <div class="company-header">
+          <div class="logo-box">
+            <div class="brand-logo-text" style="font-size: 16px; font-weight: 800; letter-spacing: 0.5px; color: #111; text-transform: uppercase;">
+              INNOTERRA
+            </div>
+          </div>
+
+          <div class="company-details">
+            <div class="company-name" style="font-size: 18px; font-weight: bold; margin: 2px 0;">
+              {{ businessSettings.businessName }}
+            </div>
+
+            <div
+              *ngIf="businessSettings.ownerName"
+              class="owner-name" style="font-size: 11px; margin-bottom: 2px;">
+              {{ businessSettings.ownerName }}
+            </div>
+
+            <div *ngIf="getBusinessAddress()" style="font-size: 11px; margin-bottom: 2px;">
+              {{ getBusinessAddress() }}
+            </div>
+
+            <div style="font-size: 11px; margin-bottom: 2px;">
+              {{ businessSettings.city || 'Solapur' }}<span *ngIf="businessSettings.state">, </span>{{ businessSettings.state || 'Maharashtra' }}, State Code: {{ getStateCode(businessSettings.state) }}<span *ngIf="businessSettings.pincode">, PIN Code: {{ businessSettings.pincode }}</span>, India
+            </div>
+
+            <div *ngIf="businessSettings.gstin" style="font-size: 12px; font-weight: bold; margin-top: 2px;">
+              GSTIN: {{ businessSettings.gstin }}
+            </div>
+
+            <div *ngIf="businessSettings.phone" style="font-size: 11px;">
+              Phone: {{ businessSettings.phone }}
+            </div>
+          </div>
+        </div>
+
+        <!-- BILL TITLE -->
+        <div class="bill-title">
+          BILL OF SUPPLY
+        </div>
+
+        <!-- INVOICE INFORMATION -->
+        <div class="invoice-information">
+          <div class="invoice-info-left">
+            <div class="info-line">
+              <span>Invoice No. :</span>
+              <strong>{{ getInvoiceNumber(currentSale!) }}</strong>
+            </div>
+
+            <div class="info-line">
+              <span>Invoice Date :</span>
+              <strong>{{ formatDate(currentSale?.invoice_date) }}</strong>
+            </div>
+
+            <div class="info-line">
+              <span>External Doc No. :</span>
+              <strong>{{ currentSale?.external_doc_no || '—' }}</strong>
+            </div>
+          </div>
+
+          <div class="invoice-info-right">
+            <div class="info-line">
+              <span>Transport Mode</span>
+              <strong>{{ currentSale?.transport_mode || 'By Road' }}</strong>
+            </div>
+
+            <div class="info-line">
+              <span>Place of Supply</span>
+              <strong>{{ currentSale?.place_of_supply || '27-Maharashtra' }}</strong>
+            </div>
+
+            <div class="info-line">
+              <span>DC No.</span>
+              <strong>{{ currentSale?.dc_no || '—' }}</strong>
+            </div>
+          </div>
+        </div>
+
+        <!-- CUSTOMER HEADERS -->
+        <div class="customer-heading-row">
+          <div>Bill to Customer</div>
+          <div>Ship to Customer</div>
+        </div>
+
+        <!-- CUSTOMER DETAILS -->
+        <div class="customer-details-row">
+
+          <!-- BILL TO -->
+          <div class="customer-box">
+            <strong class="customer-name">
+              {{ currentSale?.customer_name || 'Walk-in Customer' }}
+            </strong>
+
+            <div *ngIf="currentSale?.customer_address">
+              {{ currentSale?.customer_address }}
+            </div>
+
+            <div *ngIf="currentSale?.customer_city">
+              {{ currentSale?.customer_city }}
+            </div>
+
+            <div *ngIf="currentSale?.customer_state">
+              {{ currentSale?.customer_state }},
+              State Code:
+              {{ getStateCode(currentSale?.customer_state) }}
+            </div>
+
+            <div *ngIf="currentSale?.customer_pincode">
+              PIN Code: {{ currentSale?.customer_pincode }}
+            </div>
+
+            <div>India</div>
+
+            <div *ngIf="currentSale?.customer_gstin">
+              GSTIN: {{ currentSale?.customer_gstin }}
+            </div>
+
+            <div
+              *ngIf="currentSale?.customer_mobile || currentSale?.customer_phone">
+              Mobile:
+              {{ currentSale?.customer_mobile || currentSale?.customer_phone }}
+            </div>
+          </div>
+
+          <!-- SHIP TO -->
+          <div class="customer-box">
+            <strong class="customer-name">
+              {{ currentSale?.customer_name || 'Walk-in Customer' }}
+            </strong>
+
+            <div *ngIf="currentSale?.customer_address">
+              {{ currentSale?.customer_address }}
+            </div>
+
+            <div *ngIf="currentSale?.customer_city">
+              {{ currentSale?.customer_city }}
+            </div>
+
+            <div *ngIf="currentSale?.customer_state">
+              {{ currentSale?.customer_state }},
+              State Code:
+              {{ getStateCode(currentSale?.customer_state) }}
+            </div>
+
+            <div *ngIf="currentSale?.customer_pincode">
+              PIN Code: {{ currentSale?.customer_pincode }}
+            </div>
+
+            <div>India</div>
+
+            <div *ngIf="currentSale?.customer_gstin">
+              GSTIN: {{ currentSale?.customer_gstin }}
+            </div>
+          </div>
+        </div>
+
+        <!-- PRODUCT TABLE -->
+        <table class="product-table">
+          <thead>
+            <tr>
+              <th class="sr-column">Sr</th>
+              <th class="description-column">Description</th>
+              <th class="hsn-column">HSN Code</th>
+              <th class="uom-column">UOM</th>
+              <th class="qty-column">Qty</th>
+              <th class="rate-column">Rate</th>
+              <th class="amount-column">Amount</th>
+            </tr>
+          </thead>
+
+          <tbody>
+            <tr
+              *ngFor="let item of selectedBill?.items || []; let i = index">
+
+              <td class="center">{{ i + 1 }}</td>
+
+              <td class="description-cell">
+                {{ getItemDescription(item) }}
+              </td>
+
+              <td class="center">{{ getHsn(item) }}</td>
+
+              <td class="center">{{ item.uom || 'Bag' }}</td>
+
+              <td class="center">{{ item.quantity }}</td>
+
+              <td class="right">
+                ₹{{ formatCurrency(item.rate) }}
+              </td>
+
+              <td class="right">
+                ₹{{ formatCurrency(getItemAmount(item)) }}
+              </td>
+            </tr>
+
+            <!-- TOTAL ROW -->
+            <tr class="product-total-row">
+              <td colspan="4" class="right">
+                <strong>Total Qty</strong>
+              </td>
+
+              <td class="center">
+                <strong>{{ getTotalQuantity(selectedBill?.items) }}</strong>
+              </td>
+
+              <td class="right">
+                <strong>Total Amount</strong>
+              </td>
+
+              <td class="right">
+                <strong>₹ {{ formatCurrency(currentSale?.subtotal) }}</strong>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+
+        <!-- AMOUNT IN WORDS AND TAX -->
+        <div class="amount-summary">
+          <div class="amount-words">
+            <strong>Total Invoice Amount in Words:</strong>
+
+            <div class="words-value">
+              *** INR {{ numberToWords(currentGrandTotal) }}
+            </div>
+          </div>
+
+          <div class="amount-right">
+            <ng-container *ngIf="(currentSale?.cgst || 0) > 0 || (currentSale?.sgst || 0) > 0; else igstBlock">
+              <div class="amount-line">
+                <span>Add: CGST</span>
+                <strong>
+                  ₹{{ formatCurrency(currentSale?.cgst) }}
+                </strong>
+              </div>
+              <div class="amount-line">
+                <span>Add: SGST</span>
+                <strong>
+                  ₹{{ formatCurrency(currentSale?.sgst) }}
+                </strong>
+              </div>
+            </ng-container>
+            <ng-template #igstBlock>
+              <div class="amount-line">
+                <span>Add: IGST</span>
+                <strong>
+                  ₹{{ formatCurrency(currentSale?.igst || currentSale?.total_tax || 0) }}
+                </strong>
+              </div>
+            </ng-template>
+
+            <div class="amount-line final-amount">
+              <span>
+                Total Amount
+                <br>
+                after Tax :
+              </span>
+
+              <strong>
+                ₹{{ formatCurrency(currentGrandTotal) }}
+              </strong>
+            </div>
+          </div>
+        </div>
+
+        <!-- BOTTOM SECTION -->
+        <div class="bottom-three-columns">
+
+          <!-- BANK DETAILS -->
+          <div class="bank-details">
+            <div class="bottom-heading">Bank Details</div>
+
+            <div class="bottom-content">
+              <div>
+                Bank Name: {{ businessSettings.bankName || '—' }}
+              </div>
+
+              <div>
+                Bank A/C: {{ businessSettings.accountNumber || '—' }}
+              </div>
+
+              <div>
+                IFSC Code: {{ businessSettings.ifscCode || '—' }}
+              </div>
+            </div>
+          </div>
+
+          <!-- TERMS -->
+          <div class="terms-details">
+            <div class="bottom-heading">Terms &amp; Conditions</div>
+            <div class="bottom-content">Advance</div>
+          </div>
+
+          <!-- CERTIFICATION -->
+          <div class="certification-details">
+            <div class="bottom-heading">
+              Certified that the particulars
+              given above are true
+              and Correct
+            </div>
+
+            <div class="authorized-name">
+              FOR {{ businessSettings.businessName }}
+            </div>
+          </div>
+        </div>
+
+        <!-- PAYMENT DETAILS: SCREEN ONLY -->
+        <div class="payment-summary no-print">
+          <div class="payment-summary-title">
+            Payment Details
+          </div>
+
+          <div class="payment-summary-grid">
+
+            <div>
+              <span>Invoice Total</span>
+              <strong>
+                ₹{{ formatCurrency(currentGrandTotal) }}
+              </strong>
+            </div>
+
+            <div>
+              <span>Paid Amount</span>
+              <strong>
+                ₹{{ formatCurrency(currentSale?.paid_amount || 0) }}
+              </strong>
+            </div>
+
+            <div>
+              <span>Due Amount</span>
+              <strong>
+                ₹{{ formatCurrency(currentSale?.due_amount || 0) }}
+              </strong>
+            </div>
+
+            <div>
+              <span>Payment Status</span>
+              <strong>
+                {{ getPaymentStatus(currentSale!) }}
+              </strong>
+            </div>
+
+            <!-- NEW: PAYMENT MODE -->
+            <div>
+              <span>Payment Mode</span>
+              <strong>
+                {{ getPaymentMode(currentSale!) }}
+              </strong>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- FOOTER -->
+        <div class="invoice-footer">
+          This is a Computer Generated Invoice
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,76 @@
+.customers-page {
+    padding: 30px;
+    background: #f5f7fb;
+    min-height: 100vh;
+  }
+  
+  .page-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 25px;
+  }
+  
+  .page-header h1 {
+    margin: 0;
+    font-size: 30px;
+    color: #172033;
+  }
+  
+  .page-header p {
+    margin-top: 8px;
+    color: #718096;
+  }
+  
+  .add-btn {
+    background: #3182ce;
+    color: white;
+    border: none;
+    padding: 12px 20px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 14px;
+  }
+  
+  .customer-card {
+    background: white;
+    border-radius: 12px;
+    padding: 25px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  }
+  
+  .card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+  }
+  
+  .card-header h2 {
+    margin: 0;
+    color: #172033;
+  }
+  
+  .card-header input {
+    padding: 10px 14px;
+    border: 1px solid #ddd;
+    border-radius: 7px;
+    width: 250px;
+  }
+  
+  table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  
+  th {
+    text-align: left;
+    background: #f7f9fc;
+    padding: 14px;
+    color: #555;
+  }
+  
+  td {
+    padding: 14px;
+    border-bottom: 1px solid #eee;
+  }

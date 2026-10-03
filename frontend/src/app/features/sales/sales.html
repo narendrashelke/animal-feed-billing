@@ -1,0 +1,933 @@
+<div class="sales-page">
+
+  <!-- ===================================================== -->
+  <!-- SCREEN HEADER -->
+  <!-- ===================================================== -->
+
+  <div class="screen-header no-print">
+
+    <div>
+      <h1>Sales / Billing</h1>
+      <p>Create a new Bill of Supply</p>
+    </div>
+
+    <div class="header-actions">
+
+      <button
+        type="button"
+        class="back-btn"
+        routerLink="/dashboard">
+        ← Dashboard
+      </button>
+
+      <button
+        type="button"
+        class="clear-btn"
+        (click)="clearBill()">
+        Clear Bill
+      </button>
+
+    </div>
+
+  </div>
+
+
+  <!-- ===================================================== -->
+  <!-- MESSAGE -->
+  <!-- ===================================================== -->
+
+  <div
+    class="message no-print"
+    *ngIf="message">
+
+    {{ message }}
+
+  </div>
+
+
+  <!-- ===================================================== -->
+  <!-- BILL ENTRY -->
+  <!-- ===================================================== -->
+
+  <div class="entry-area no-print">
+
+    <!-- CUSTOMER -->
+
+    <section class="entry-card">
+
+      <h2>Customer Details</h2>
+
+      <p>Select the customer for this invoice</p>
+
+      <label>
+        Customer <span>*</span>
+      </label>
+
+      <select
+        name="customer"
+        [(ngModel)]="selectedCustomerId">
+
+        <option [ngValue]="null">
+          -- Select Customer --
+        </option>
+
+        <option
+          *ngFor="let customer of customers"
+          [ngValue]="customer.id">
+
+          {{ customer.customer_code }}
+          -
+          {{ customer.name }}
+
+        </option>
+
+      </select>
+
+      <small>
+        {{ customers.length }} customer(s) available
+      </small>
+
+    </section>
+
+
+    <!-- PRODUCT -->
+
+    <section class="entry-card">
+
+      <h2>
+        Add Product 
+        <span style="background: #e0f2fe; color: #0369a1; font-weight: 600; padding: 3px 8px; border-radius: 12px; font-size: 12px; margin-left: 8px;" *ngIf="billItems.length > 0">
+          {{ billItems.length }} Product(s) Added
+        </span>
+      </h2>
+
+      <p>Select a product and enter quantity (Multiple products supported)</p>
+
+      <div class="product-entry-row">
+
+        <div class="product-field">
+
+          <label>
+            Product <span>*</span>
+          </label>
+
+          <select
+            name="product"
+            [(ngModel)]="selectedProductId">
+
+            <option [ngValue]="null">
+              -- Select Product --
+            </option>
+
+            <option
+              *ngFor="let product of products"
+              [ngValue]="product.id">
+
+              {{ product.product_code }}
+              -
+              {{ product.product_name }}
+              -
+              ₹{{ product.selling_rate | number:'1.2-2' }}
+
+            </option>
+
+          </select>
+
+        </div>
+
+
+        <div class="quantity-field">
+
+          <label>Quantity</label>
+
+          <input
+            type="number"
+            name="quantity"
+            min="1"
+            [(ngModel)]="quantity">
+
+        </div>
+
+
+        <button
+          type="button"
+          class="add-product-btn"
+          (click)="addProduct()">
+
+          + Add Product
+
+        </button>
+
+      </div>
+
+      <small>
+        {{ products.length }} product(s) available
+      </small>
+
+    </section>
+
+  </div>
+
+
+  <!-- ===================================================== -->
+  <!-- ACTUAL INVOICE -->
+  <!-- ===================================================== -->
+
+  <div
+    class="invoice-paper"
+    id="invoice-print-area">
+
+
+    <!-- ================================================= -->
+    <!-- COMPANY HEADER -->
+    <!-- ================================================= -->
+
+    <div class="company-header">
+
+      <div class="company-logo">
+        <div class="brand-logo-text" style="font-size: 16px; font-weight: 800; letter-spacing: 0.5px; color: #111; text-transform: uppercase;">
+          INNOTERRA
+        </div>
+      </div>
+
+      <div class="company-details">
+
+        <h1 style="margin: 2px 0; font-size: 18px; font-weight: 800;">
+          {{ business.businessName }}
+        </h1>
+
+        <div *ngIf="business.ownerName" style="font-size: 11px; margin-bottom: 2px;">
+          {{ business.ownerName }}
+        </div>
+
+        <div *ngIf="business.address" style="font-size: 11px; margin-bottom: 2px;">
+          {{ business.address }}
+        </div>
+
+        <div style="font-size: 11px; margin-bottom: 2px;">
+          {{ business.city }}<span *ngIf="business.city && business.state">, </span>{{ business.state }}<span *ngIf="business.state">, State Code: 27</span><span *ngIf="business.pincode">, PIN Code: {{ business.pincode }}</span>, India
+        </div>
+
+        <div class="gst-line" *ngIf="business.gstin" style="font-size: 12px; font-weight: bold; margin-top: 2px;">
+          GSTIN: {{ business.gstin }}
+        </div>
+
+        <div *ngIf="business.phone" style="font-size: 11px;">
+          Phone: {{ business.phone }}
+        </div>
+
+        <div *ngIf="business.email" style="font-size: 11px;">
+          Email: {{ business.email }}
+        </div>
+
+      </div>
+
+    </div>
+
+
+    <!-- ================================================= -->
+    <!-- BILL OF SUPPLY -->
+    <!-- ================================================= -->
+
+    <div class="bill-title">
+      BILL OF SUPPLY
+    </div>
+
+
+    <!-- ================================================= -->
+    <!-- INVOICE INFORMATION -->
+    <!-- ================================================= -->
+
+    <div class="invoice-info-grid">
+
+      <div class="info-left">
+
+        <div>
+          <strong>Invoice No.</strong>
+          <span>{{ invoiceNumber }}</span>
+        </div>
+
+        <div>
+          <strong>Invoice Date</strong>
+          <span>{{ invoiceDate }}</span>
+        </div>
+
+        <div>
+          <strong>External Doc No.</strong>
+          <span>
+            {{ externalDocNo || '—' }}
+          </span>
+        </div>
+
+      </div>
+
+
+      <div class="info-right">
+
+        <div>
+          <strong>Transport Mode</strong>
+          <span>{{ transportMode }}</span>
+        </div>
+
+        <div>
+          <strong>Place of Supply</strong>
+          <span>{{ placeOfSupply }}</span>
+        </div>
+
+        <div>
+          <strong>DC No.</strong>
+          <span>
+            {{ dcNo || '—' }}
+          </span>
+        </div>
+
+      </div>
+
+    </div>
+
+
+    <!-- ================================================= -->
+    <!-- BILL TO / SHIP TO -->
+    <!-- ================================================= -->
+
+    <div class="customer-heading-grid">
+
+      <div>
+        Bill to Customer
+      </div>
+
+      <div>
+        Ship to Customer
+      </div>
+
+    </div>
+
+
+    <div class="customer-grid">
+
+      <!-- BILL TO -->
+
+      <div class="customer-box">
+
+        <ng-container
+          *ngIf="selectedCustomer as customer; else noCustomer">
+
+          <strong>
+            {{ customer.name }}
+          </strong>
+
+          <div *ngIf="customer.address">
+            {{ customer.address }}
+          </div>
+
+          <div *ngIf="customer.village">
+            {{ customer.village }}
+          </div>
+
+          <div *ngIf="customer.taluka">
+            Taluka:
+            {{ customer.taluka }}
+          </div>
+
+          <div *ngIf="customer.district">
+            {{ customer.district }}
+          </div>
+
+          <div>
+            {{ customer.state || 'Maharashtra' }}
+
+            <span
+              *ngIf="customer.state_code">
+
+              , State Code:
+              {{ customer.state_code }}
+
+            </span>
+          </div>
+
+          <div *ngIf="customer.pincode">
+            PIN Code:
+            {{ customer.pincode }}
+          </div>
+
+          <div>
+            India
+          </div>
+
+          <div *ngIf="customer.gstin">
+            GSTIN:
+            {{ customer.gstin }}
+          </div>
+
+          <div *ngIf="customer.mobile">
+            Phone:
+            {{ customer.mobile }}
+          </div>
+
+        </ng-container>
+
+        <ng-template #noCustomer>
+
+          <strong>
+            Customer Not Selected
+          </strong>
+
+          <div>India</div>
+
+        </ng-template>
+
+      </div>
+
+
+      <!-- SHIP TO -->
+
+      <div class="customer-box">
+
+        <ng-container
+          *ngIf="selectedCustomer as customer; else noShipCustomer">
+
+          <strong>
+            {{ customer.name }}
+          </strong>
+
+          <div *ngIf="customer.address">
+            {{ customer.address }}
+          </div>
+
+          <div *ngIf="customer.village">
+            {{ customer.village }}
+          </div>
+
+          <div *ngIf="customer.taluka">
+            Taluka:
+            {{ customer.taluka }}
+          </div>
+
+          <div *ngIf="customer.district">
+            {{ customer.district }}
+          </div>
+
+          <div>
+            {{ customer.state || 'Maharashtra' }}
+
+            <span
+              *ngIf="customer.state_code">
+
+              , State Code:
+              {{ customer.state_code }}
+
+            </span>
+          </div>
+
+          <div *ngIf="customer.pincode">
+            PIN Code:
+            {{ customer.pincode }}
+          </div>
+
+          <div>
+            India
+          </div>
+
+          <div *ngIf="customer.gstin">
+            GSTIN:
+            {{ customer.gstin }}
+          </div>
+
+        </ng-container>
+
+        <ng-template #noShipCustomer>
+
+          <strong>
+            Customer Not Selected
+          </strong>
+
+          <div>India</div>
+
+        </ng-template>
+
+      </div>
+
+    </div>
+
+
+    <!-- ================================================= -->
+    <!-- ITEMS TABLE -->
+    <!-- ================================================= -->
+
+    <table class="invoice-table">
+
+      <thead>
+
+        <tr>
+
+          <th class="sr-column">
+            Sr
+          </th>
+
+          <th class="description-column">
+            Description
+          </th>
+
+          <th>
+            HSN Code
+          </th>
+
+          <th>
+            UOM
+          </th>
+
+          <th>
+            Qty
+          </th>
+
+          <th>
+            Rate
+          </th>
+
+          <th>
+            Amount
+          </th>
+
+          <th class="no-print action-column">
+            Action
+          </th>
+
+        </tr>
+
+      </thead>
+
+
+      <tbody>
+
+        <tr
+          *ngFor="
+            let item of billItems;
+            let i = index
+          ">
+
+          <td class="center">
+            {{ i + 1 }}
+          </td>
+
+          <td class="description">
+            {{ item.product.product_name }}
+
+            <div
+              class="product-code">
+
+              Code:
+              {{ item.product.product_code }}
+
+            </div>
+
+          </td>
+
+          <td class="center">
+
+            {{ item.product.hsn_code || '—' }}
+
+          </td>
+
+          <td class="center">
+
+            {{ item.product.uom || '—' }}
+
+          </td>
+
+          <td class="center">
+
+            <div class="qty-adjuster no-print" style="display: flex; align-items: center; justify-content: center; gap: 4px;">
+              <button type="button" (click)="decrementQuantity(i)" style="padding: 2px 7px; border: 1px solid #cbd5e1; background: #f8fafc; border-radius: 4px; cursor: pointer; font-weight: bold; font-size: 13px;">-</button>
+              <input type="number" [ngModel]="item.quantity" (ngModelChange)="updateItemQuantity(i, $event)" min="1" style="width: 55px; text-align: center; border: 1px solid #cbd5e1; border-radius: 4px; padding: 3px 4px; font-weight: bold;">
+              <button type="button" (click)="incrementQuantity(i)" style="padding: 2px 7px; border: 1px solid #cbd5e1; background: #f8fafc; border-radius: 4px; cursor: pointer; font-weight: bold; font-size: 13px;">+</button>
+            </div>
+
+            <span class="print-only-qty">{{ item.quantity }}</span>
+
+          </td>
+
+          <td class="money">
+
+            ₹{{ item.rate | number:'1.2-2' }}
+
+          </td>
+
+          <td class="money">
+
+            ₹{{ item.taxableAmount | number:'1.2-2' }}
+
+          </td>
+
+          <td class="no-print center">
+
+            <button
+              type="button"
+              class="remove-btn"
+              (click)="removeItem(i)">
+
+              Remove
+
+            </button>
+
+          </td>
+
+        </tr>
+
+
+        <tr
+          *ngIf="billItems.length === 0">
+
+          <td
+            colspan="8"
+            class="empty-row">
+
+            No products added to this bill.
+
+          </td>
+
+        </tr>
+
+
+        <!-- TOTAL QUANTITY -->
+
+        <tr
+          *ngIf="billItems.length > 0"
+          class="table-total-row">
+
+          <td
+            colspan="4"
+            class="right">
+
+            <strong>Total Qty</strong>
+
+          </td>
+
+          <td class="center">
+            <strong>
+              {{ totalQuantity }}
+            </strong>
+          </td>
+
+          <td class="right">
+            <strong>Total Amount</strong>
+          </td>
+
+          <td class="money">
+            <strong>
+              ₹{{ subtotal | number:'1.2-2' }}
+            </strong>
+          </td>
+
+          <td class="no-print"></td>
+
+        </tr>
+
+      </tbody>
+
+    </table>
+
+
+    <!-- ================================================= -->
+    <!-- AMOUNT IN WORDS / TAX -->
+    <!-- ================================================= -->
+
+    <div class="amount-summary-grid">
+
+      <div class="amount-words">
+
+        <strong>
+          Total Invoice Amount in Words:
+        </strong>
+
+        <p>
+          *** INR {{ amountInWords }}.
+        </p>
+
+      </div>
+
+
+      <div class="tax-summary">
+
+        <ng-container *ngIf="isIntraState; else interStateTax">
+          <div>
+            <span>
+              Add: CGST
+            </span>
+            <strong>
+              ₹{{ cgstTotal | number:'1.2-2' }}
+            </strong>
+          </div>
+          <div>
+            <span>
+              Add: SGST
+            </span>
+            <strong>
+              ₹{{ sgstTotal | number:'1.2-2' }}
+            </strong>
+          </div>
+        </ng-container>
+        <ng-template #interStateTax>
+          <div>
+            <span>
+              Add: IGST
+            </span>
+            <strong>
+              ₹{{ igstTotal | number:'1.2-2' }}
+            </strong>
+          </div>
+        </ng-template>
+
+        <div class="after-tax">
+
+          <span>
+            Total Amount<br>
+            after Tax :
+          </span>
+
+          <strong>
+            ₹{{ grandTotal | number:'1.2-2' }}
+          </strong>
+
+        </div>
+
+      </div>
+
+    </div>
+
+
+    <!-- ================================================= -->
+    <!-- BOTTOM DETAILS -->
+    <!-- ================================================= -->
+
+    <div class="bottom-grid">
+
+      <!-- BANK -->
+
+      <div class="bottom-box">
+
+        <div class="bottom-title">
+          Bank Details
+        </div>
+
+        <div class="bottom-content">
+
+          <div *ngIf="business.bankName">
+            Bank Name:
+            {{ business.bankName }}
+          </div>
+
+          <div *ngIf="business.accountNumber">
+            Bank A/C:
+            {{ business.accountNumber }}
+          </div>
+
+          <div *ngIf="business.ifscCode">
+            IFSC Code:
+            {{ business.ifscCode }}
+          </div>
+
+          <div
+            *ngIf="
+              !business.bankName &&
+              !business.accountNumber &&
+              !business.ifscCode
+            ">
+
+            Bank details not configured.
+
+          </div>
+
+        </div>
+
+      </div>
+
+
+      <!-- TERMS -->
+
+      <div class="bottom-box">
+
+        <div class="bottom-title">
+          Terms & Conditions
+        </div>
+
+        <div class="bottom-content terms">
+
+          Advance
+
+        </div>
+
+      </div>
+
+
+      <!-- CERTIFICATION -->
+
+      <div class="bottom-box certification">
+
+        <div class="bottom-title">
+
+          Certified that the particulars
+          given above are true and Correct
+
+        </div>
+
+        <div class="signature">
+
+          <div>
+            FOR
+            {{ business.businessName }}
+          </div>
+
+          <div class="signature-space">
+            Authorized Signatory
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+
+  <!-- ===================================================== -->
+  <!-- SCREEN TOTAL CARD -->
+  <!-- ===================================================== -->
+
+  <div class="screen-total no-print">
+
+    <div>
+      <span>Subtotal</span>
+      <strong>
+        ₹{{ subtotal | number:'1.2-2' }}
+      </strong>
+    </div>
+
+    <div>
+      <span>GST</span>
+      <strong>
+        ₹{{ gstTotal | number:'1.2-2' }}
+      </strong>
+    </div>
+
+    <div class="grand">
+
+      <span>Grand Total</span>
+
+      <strong>
+        ₹{{ grandTotal | number:'1.2-2' }}
+      </strong>
+
+    </div>
+
+
+    <!-- ================================================= -->
+    <!-- PAYMENT DETAILS -->
+    <!-- ================================================= -->
+
+    <div class="payment-section">
+
+      <div class="payment-grid">
+
+        <div class="payment-field">
+          <label for="paymentMode">Payment Mode</label>
+          <select
+            id="paymentMode"
+            name="paymentMode"
+            [(ngModel)]="paymentMode"
+            class="paid-input">
+            <option value="Cash">Cash</option>
+            <option value="UPI">UPI</option>
+            <option value="Credit Card">Credit Card</option>
+            <option value="Debit Card">Debit Card</option>
+            <option value="Bank Transfer">Bank Transfer</option>
+            <option value="Cheque">Cheque</option>
+            <option value="Credit">Credit</option>
+            <option value="Other">Other</option>
+          </select>
+        </div>
+
+        <div class="payment-field">
+          <label for="paidAmount">Paid Amount</label>
+
+          <input
+            id="paidAmount"
+            type="number"
+            name="paidAmount"
+            min="0"
+            step="0.01"
+            [(ngModel)]="paidAmount"
+            (ngModelChange)="calculatePayment()"
+            class="paid-input"
+            placeholder="Enter paid amount">
+        </div>
+
+        <div class="payment-field">
+          <label>Due Amount</label>
+
+          <div class="due-display">
+            ₹{{ dueAmount | number:'1.2-2' }}
+          </div>
+        </div>
+
+        <div class="payment-field">
+          <label>Payment Status</label>
+
+          <div
+            class="payment-status"
+            [ngClass]="{
+              'status-paid': paymentStatus === 'Paid',
+              'status-partial': paymentStatus === 'Partial',
+              'status-pending': paymentStatus === 'Pending'
+            }">
+            {{ paymentStatus }}
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+
+
+    <div class="bill-actions">
+
+      <button
+        type="button"
+        class="save-btn"
+        [disabled]="
+          billItems.length === 0 ||
+          isSaving
+        "
+        (click)="saveBill()">
+
+        {{ isSaving ? 'Saving Bill...' : 'Save Bill' }}
+
+      </button>
+
+
+      <button
+        type="button"
+        class="print-btn"
+        [disabled]="billItems.length === 0"
+        (click)="printBill()">
+
+        🖨 Print Bill
+
+      </button>
+
+
+      <button
+        type="button"
+        class="pdf-btn"
+        [disabled]="billItems.length === 0"
+        (click)="generatePdf()">
+
+        📄 Generate PDF
+
+      </button>
+
+    </div>
+
+  </div>
+
+</div>

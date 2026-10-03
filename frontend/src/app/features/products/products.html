@@ -1,0 +1,544 @@
+
+<div class="products-page">
+
+  <!-- HEADER -->
+  <div class="page-header">
+    <div>
+      <h1>Products</h1>
+      <p>Manage animal feed products and stock</p>
+    </div>
+
+    <button
+      type="button"
+      class="add-btn"
+      (click)="openForm()">
+      + Add Product
+    </button>
+  </div>
+
+  <!-- SUCCESS MESSAGE -->
+  <div class="message" *ngIf="message">
+    {{ message }}
+  </div>
+
+  <!-- GENERAL ERROR MESSAGE -->
+  <div class="error-message" *ngIf="errorMessage">
+    {{ errorMessage }}
+  </div>
+
+  <!-- INVENTORY SUCCESS MESSAGE -->
+  <div class="message" *ngIf="inventoryMessage">
+    {{ inventoryMessage }}
+  </div>
+
+  <!-- INVENTORY ERROR MESSAGE -->
+  <div class="error-message" *ngIf="inventoryError">
+    {{ inventoryError }}
+  </div>
+
+  <!-- ADD PRODUCT FORM -->
+  <div class="form-card" *ngIf="showForm">
+
+    <div class="form-header">
+      <div>
+        <h2>{{ isEditing ? 'Edit Product' : 'Add Product' }}</h2>
+        <p>{{ isEditing ? 'Update product information' : 'Enter product information' }}</p>
+      </div>
+
+      <button
+        type="button"
+        class="close-btn"
+        (click)="closeForm()">
+        ✕
+      </button>
+    </div>
+
+    <form (ngSubmit)="saveProduct()">
+      <div class="form-grid">
+
+        <div class="form-group">
+          <label>Product Code *</label>
+          <input
+            type="text"
+            name="product_code"
+            [(ngModel)]="product.product_code"
+            placeholder="Example: CF003"
+            required>
+        </div>
+
+        <div class="form-group">
+          <label>Product Name *</label>
+          <input
+            type="text"
+            name="product_name"
+            [(ngModel)]="product.product_name"
+            placeholder="Enter product name"
+            required>
+        </div>
+
+        <div class="form-group">
+          <label>HSN Code</label>
+          <input
+            type="text"
+            name="hsn_code"
+            [(ngModel)]="product.hsn_code">
+        </div>
+
+        <div class="form-group">
+          <label>Unit</label>
+          <select
+            name="uom"
+            [(ngModel)]="product.uom">
+            <option value="Bag">Bag</option>
+            <option value="Kg">Kg</option>
+            <option value="Nos">Nos</option>
+            <option value="Litre">Litre</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label>Weight</label>
+          <input
+            type="number"
+            name="weight"
+            [(ngModel)]="product.weight"
+            min="0">
+        </div>
+
+        <div class="form-group">
+          <label>Purchase Rate</label>
+          <input
+            type="number"
+            name="purchase_rate"
+            [(ngModel)]="product.purchase_rate"
+            min="0">
+        </div>
+
+        <div class="form-group">
+          <label>Selling Rate</label>
+          <input
+            type="number"
+            name="selling_rate"
+            [(ngModel)]="product.selling_rate"
+            min="0">
+        </div>
+
+        <div class="form-group">
+          <label>GST Rate (%)</label>
+          <input
+            type="number"
+            name="gst_rate"
+            [(ngModel)]="product.gst_rate"
+            min="0"
+            step="0.01">
+        </div>
+
+        <div class="form-group">
+          <label>Opening Stock Quantity</label>
+          <input
+            type="number"
+            name="stock_quantity"
+            [(ngModel)]="product.stock_quantity"
+            min="0">
+        </div>
+
+        <div class="form-group">
+          <label>Minimum Stock</label>
+          <input
+            type="number"
+            name="minimum_stock"
+            [(ngModel)]="product.minimum_stock"
+            min="0">
+        </div>
+
+      </div>
+
+      <div class="form-actions">
+        <button
+          type="button"
+          class="cancel-btn"
+          (click)="closeForm()">
+          Cancel
+        </button>
+
+        <button
+          type="submit"
+          class="save-btn"
+          [disabled]="savingProduct">
+          {{ savingProduct ? 'Saving...' : (isEditing ? 'Update Product' : 'Save Product') }}
+        </button>
+      </div>
+    </form>
+  </div>
+
+  <!-- INVENTORY FORM -->
+  <div
+    class="form-card inventory-form"
+    *ngIf="showInventoryForm">
+
+    <div class="form-header">
+      <div>
+        <h2>{{ inventoryFormTitle }}</h2>
+        <p>
+          {{
+            inventoryAction === 'STOCK_IN'
+              ? 'Record new stock received'
+              : 'Correct stock to match the physical count'
+          }}
+        </p>
+      </div>
+
+      <button
+        type="button"
+        class="close-btn"
+        (click)="closeInventoryForm()">
+        ✕
+      </button>
+    </div>
+
+    <form (ngSubmit)="submitInventory()">
+
+      <div class="form-grid">
+
+        <!-- PRODUCT -->
+        <div class="form-group">
+          <label>Product *</label>
+
+          <select
+            name="selectedProductId"
+            [(ngModel)]="selectedProductId"
+            required>
+
+            <option [ngValue]="null">Select a product</option>
+
+            @for (item of products; track item.id) {
+              <option [ngValue]="item.id">
+                {{ item.product_code }} - {{ item.product_name }}
+              </option>
+            }
+
+          </select>
+        </div>
+
+        <!-- CURRENT STOCK -->
+        <div class="form-group">
+          <label>Current Stock</label>
+
+          <input
+            type="text"
+            [value]="
+              selectedProduct
+                ? selectedProduct.stock_quantity + ' ' + selectedProduct.uom
+                : ''
+            "
+            readonly>
+        </div>
+
+        <!-- QUANTITY -->
+        <div class="form-group">
+          <label>{{ inventoryQuantityLabel }} *</label>
+
+          <input
+            type="number"
+            name="inventoryQuantity"
+            [(ngModel)]="inventoryQuantity"
+            [min]="inventoryAction === 'STOCK_IN' ? 0.01 : 0"
+            step="0.01"
+            required>
+
+          <small *ngIf="inventoryAction === 'ADJUSTMENT'">
+            Enter the actual physical stock count, not the difference.
+          </small>
+        </div>
+
+        <!-- EXPECTED RESULT -->
+        <div class="form-group">
+          <label>Stock After Operation</label>
+
+          <input
+            type="text"
+            [value]="
+              selectedProduct && inventoryQuantity !== null &&
+              inventoryQuantity >= 0 &&
+              (inventoryAction === 'ADJUSTMENT' || inventoryQuantity > 0)
+                ? (
+                    inventoryAction === 'STOCK_IN'
+                      ? selectedProduct.stock_quantity + inventoryQuantity
+                      : inventoryQuantity
+                  ) + ' ' + selectedProduct.uom
+                : ''
+            "
+            readonly>
+        </div>
+
+        <!-- REASON -->
+        <div class="form-group">
+          <label>Reason *</label>
+
+          <input
+            type="text"
+            name="inventoryReason"
+            [(ngModel)]="inventoryReason"
+            [placeholder]="
+              inventoryAction === 'STOCK_IN'
+                ? 'Example: New supplier delivery'
+                : 'Example: Physical count variance / damaged bags'
+            "
+            required>
+        </div>
+
+        <!-- REFERENCE -->
+        <div class="form-group">
+          <label>Reference Number (Optional)</label>
+
+          <input
+            type="text"
+            name="inventoryReference"
+            [(ngModel)]="inventoryReference"
+            placeholder="Example: Purchase invoice number">
+        </div>
+
+      </div>
+
+      <div class="form-actions">
+        <button
+          type="button"
+          class="cancel-btn"
+          (click)="closeInventoryForm()">
+          Cancel
+        </button>
+
+        <button
+          type="submit"
+          class="save-btn"
+          [disabled]="savingInventory">
+          {{ savingInventory ? 'Processing...' : 'Confirm Update' }}
+        </button>
+      </div>
+
+    </form>
+  </div>
+
+  <!-- PRODUCT LIST -->
+  <div class="product-card">
+
+    <div class="list-header">
+      <div>
+        <h2>Product List</h2>
+        <p>{{ products.length }} products</p>
+      </div>
+    </div>
+
+    <div class="table-container">
+      <table>
+        <thead>
+          <tr>
+            <th>Code</th>
+            <th>Product Name</th>
+            <th>HSN</th>
+            <th>Unit</th>
+            <th>Weight</th>
+            <th>Purchase Rate</th>
+            <th>Selling Rate</th>
+            <th>GST %</th>
+            <th>Stock</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+
+        <tbody>
+
+          @if (loadingProducts) {
+            <tr>
+              <td colspan="10" class="empty">
+                Loading products...
+              </td>
+            </tr>
+          } @else {
+
+            @for (item of products; track item.id) {
+              <tr>
+                <td>
+                  <strong>{{ item.product_code }}</strong>
+                </td>
+
+                <td>{{ item.product_name }}</td>
+                <td>{{ item.hsn_code }}</td>
+                <td>{{ item.uom }}</td>
+                <td>{{ item.weight }}</td>
+                <td>₹{{ item.purchase_rate }}</td>
+                <td>₹{{ item.selling_rate }}</td>
+                <td>{{ item.gst_rate }}%</td>
+
+                <td
+                  [class.low-stock]="item.stock_quantity <= item.minimum_stock">
+                  {{ item.stock_quantity }}
+                </td>
+
+                <td class="action-cell">
+
+                  <button
+                    type="button"
+                    class="edit-btn"
+                    (click)="openEditProduct(item)"
+                    style="background: #3b82f6; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-size: 13px; font-weight: 500; margin-right: 4px;">
+                    ✏️ Edit
+                  </button>
+
+                  <button
+                    type="button"
+                    class="stock-in-btn"
+                    (click)="openInventoryForm('STOCK_IN', item)">
+                    Stock In
+                  </button>
+
+                  <button
+                    type="button"
+                    class="adjust-btn"
+                    (click)="openInventoryForm('ADJUSTMENT', item)">
+                    Adjust
+                  </button>
+
+                  <!-- UPDATED HISTORY BUTTON -->
+                  <button
+                    type="button"
+                    class="history-btn"
+                    [disabled]="!item.id"
+                    (click)="item.id != null && loadProductHistory(item.id)">
+                    History
+                  </button>
+
+                  <!-- DELETE BUTTON -->
+                  <button
+                    type="button"
+                    class="delete-btn"
+                    [disabled]="!item.id"
+                    (click)="deleteProduct(item)"
+                    style="background: #ef4444; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-size: 13px; font-weight: 500; margin-left: 4px;">
+                    🗑 Delete
+                  </button>
+
+                </td>
+              </tr>
+            } @empty {
+              <tr>
+                <td colspan="10" class="empty">
+                  No products found.
+                </td>
+              </tr>
+            }
+
+          }
+
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- INVENTORY HISTORY -->
+  <div class="product-card history-card">
+
+    <div class="list-header history-header">
+      <div>
+        <h2>Inventory History</h2>
+        <p>Track stock received and stock corrections</p>
+      </div>
+
+      <div class="history-actions">
+
+        <button
+          type="button"
+          class="history-btn"
+          (click)="showAllInventoryHistory()">
+          Show All
+        </button>
+
+      </div>
+    </div>
+
+    <!-- HISTORY ERROR -->
+    <div class="error-message" *ngIf="historyError">
+      {{ historyError }}
+    </div>
+
+    <!-- HISTORY TABLE -->
+    <div class="table-container">
+      <table>
+        <thead>
+          <tr>
+            <th>Date</th>
+            <th>Product Code</th>
+            <th>Product Name</th>
+            <th>Movement</th>
+            <th>Change</th>
+            <th>Previous Stock</th>
+            <th>New Stock</th>
+            <th>Reason</th>
+            <th>Reference</th>
+          </tr>
+        </thead>
+
+        <tbody>
+
+          @if (loadingHistory) {
+            <tr>
+              <td colspan="9" class="empty">
+                Loading inventory history...
+              </td>
+            </tr>
+          } @else {
+
+            @for (movement of movements; track movement.id) {
+              <tr>
+                <td>{{ movement.created_at }}</td>
+
+                <td>
+                  <strong>{{ movement.product_code }}</strong>
+                </td>
+
+                <td>{{ movement.product_name }}</td>
+
+                <td>
+                  <span
+                    class="movement-badge"
+                    [class.stock-in-badge]="movement.movement_type === 'STOCK_IN'"
+                    [class.adjustment-badge]="movement.movement_type === 'ADJUSTMENT'">
+
+                    {{
+                      movement.movement_type === 'STOCK_IN'
+                        ? 'Stock In'
+                        : 'Adjustment'
+                    }}
+
+                  </span>
+                </td>
+
+                <td
+                  [class.positive-change]="movement.quantity_change > 0"
+                  [class.negative-change]="movement.quantity_change < 0">
+
+                  {{ movement.quantity_change > 0 ? '+' : '' }}{{ movement.quantity_change }}
+
+                </td>
+
+                <td>{{ movement.previous_stock }}</td>
+                <td>{{ movement.new_stock }}</td>
+                <td>{{ movement.reason }}</td>
+                <td>{{ movement.reference_no || '—' }}</td>
+              </tr>
+            } @empty {
+              <tr>
+                <td colspan="9" class="empty">
+                  No inventory movements found.
+                </td>
+              </tr>
+            }
+
+          }
+
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+</div>

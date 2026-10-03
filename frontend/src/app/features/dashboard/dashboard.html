@@ -1,0 +1,1174 @@
+<div class="dashboard-page">
+
+  <!-- =====================================================
+       HEADER
+       ===================================================== -->
+
+  <header class="dashboard-header">
+
+    <div class="header-left">
+
+      <div class="logo-box">
+        <span class="logo-icon">🐄</span>
+      </div>
+
+      <div class="brand-info">
+
+        <h1>Animal Feed Billing</h1>
+
+        <p>Management System</p>
+
+      </div>
+
+    </div>
+
+
+    <div class="header-right">
+
+      <div class="date-box">
+
+        <span class="date-icon">📅</span>
+
+        <span>{{ currentDate }}</span>
+
+      </div>
+
+
+      <button
+        type="button"
+        class="refresh-button"
+        (click)="refreshDashboard()"
+        [disabled]="loading"
+        title="Refresh Dashboard">
+
+        <span [class.spinning]="loading">
+          ↻
+        </span>
+
+      </button>
+
+
+      <a
+        routerLink="/settings"
+        class="header-settings"
+        title="Settings">
+
+        ⚙️
+
+      </a>
+
+    </div>
+
+  </header>
+
+
+
+  <!-- =====================================================
+       MAIN
+       ===================================================== -->
+
+  <main class="dashboard-content">
+
+
+    <!-- ===================================================
+         WELCOME
+         =================================================== -->
+
+    <section class="welcome-section">
+
+      <div class="welcome-content">
+
+        <span class="welcome-label">
+          WELCOME BACK
+        </span>
+
+        <h2>
+          Animal Feed Billing Dashboard
+        </h2>
+
+        <p>
+          Manage your sales, customers, products and
+          invoices from one place.
+        </p>
+
+      </div>
+
+
+      <a
+        routerLink="/sales"
+        class="new-bill-button">
+
+        <span class="button-icon">
+          ＋
+        </span>
+
+        <span>
+
+          <strong>New Bill</strong>
+
+          <small>Create Invoice</small>
+
+        </span>
+
+      </a>
+
+    </section>
+
+
+
+    <!-- ===================================================
+         ERROR MESSAGE
+         =================================================== -->
+
+    <div
+      *ngIf="errorMessage"
+      class="error-message">
+
+      <span>⚠️</span>
+
+      <span>{{ errorMessage }}</span>
+
+      <button
+        type="button"
+        (click)="refreshDashboard()">
+
+        Retry
+
+      </button>
+
+    </div>
+
+
+
+    <!-- ===================================================
+         STATISTICS
+         =================================================== -->
+
+    <section class="statistics-section">
+
+      <div class="section-title">
+
+        <div>
+
+          <span class="section-label">
+            OVERVIEW
+          </span>
+
+          <h3>
+            Business Statistics
+          </h3>
+
+        </div>
+
+      </div>
+
+
+      <div class="stats-grid">
+
+
+        <!-- TODAY SALES -->
+
+        <div class="stat-card sales-stat">
+
+          <div class="stat-top">
+
+            <div class="stat-icon">
+              💰
+            </div>
+
+            <span class="stat-badge">
+              Today
+            </span>
+
+          </div>
+
+
+          <div class="stat-value">
+
+            <span *ngIf="!loading">
+              {{ formatCurrency(todaySales) }}
+            </span>
+
+            <span
+              *ngIf="loading"
+              class="loading-value">
+
+              Loading...
+
+            </span>
+
+          </div>
+
+
+          <div class="stat-label">
+            Today's Sales
+          </div>
+
+
+          <div class="stat-footer">
+
+            <span>
+              {{ todayBillCount }} bill(s)
+            </span>
+
+            <a routerLink="/sales">
+              View Sales →
+            </a>
+
+          </div>
+
+        </div>
+
+
+
+        <!-- CUSTOMERS -->
+
+        <div class="stat-card customer-stat">
+
+          <div class="stat-top">
+
+            <div class="stat-icon">
+              👥
+            </div>
+
+            <span class="stat-badge">
+              Records
+            </span>
+
+          </div>
+
+
+          <div class="stat-value">
+
+            <span *ngIf="!loading">
+              {{ totalCustomers }}
+            </span>
+
+            <span
+              *ngIf="loading"
+              class="loading-value">
+
+              Loading...
+
+            </span>
+
+          </div>
+
+
+          <div class="stat-label">
+            Total Customers
+          </div>
+
+
+          <div class="stat-footer">
+
+            <span>
+              Registered customers
+            </span>
+
+            <a routerLink="/customers">
+              Manage →
+            </a>
+
+          </div>
+
+        </div>
+
+
+
+        <!-- PRODUCTS -->
+
+        <div class="stat-card product-stat">
+
+          <div class="stat-top">
+
+            <div class="stat-icon">
+              📦
+            </div>
+
+            <span class="stat-badge">
+              Inventory
+            </span>
+
+          </div>
+
+
+          <div class="stat-value">
+
+            <span *ngIf="!loading">
+              {{ totalProducts }}
+            </span>
+
+            <span
+              *ngIf="loading"
+              class="loading-value">
+
+              Loading...
+
+            </span>
+
+          </div>
+
+
+          <div class="stat-label">
+            Total Products
+          </div>
+
+
+          <div class="stat-footer">
+
+            <span>
+              Feed products
+            </span>
+
+            <a routerLink="/products">
+              Manage →
+            </a>
+
+          </div>
+
+        </div>
+
+
+
+        <!-- DUE -->
+
+        <div class="stat-card due-stat">
+
+          <div class="stat-top">
+
+            <div class="stat-icon">
+              💳
+            </div>
+
+            <span class="stat-badge">
+              Receivable
+            </span>
+
+          </div>
+
+
+          <div class="stat-value">
+
+            <span *ngIf="!loading">
+              {{ formatCurrency(totalDue) }}
+            </span>
+
+            <span
+              *ngIf="loading"
+              class="loading-value">
+
+              Loading...
+
+            </span>
+
+          </div>
+
+
+          <div class="stat-label">
+            Total Due Amount
+          </div>
+
+
+          <div class="stat-footer">
+
+            <span>
+              Customer outstanding
+            </span>
+
+            <a routerLink="/bill-history">
+              View Bills →
+            </a>
+
+          </div>
+
+        </div>
+
+
+
+        <!-- LOW STOCK -->
+
+        <div class="stat-card stock-stat">
+
+          <div class="stat-top">
+
+            <div class="stat-icon">
+              ⚠️
+            </div>
+
+            <span class="stat-badge">
+              Alert
+            </span>
+
+          </div>
+
+
+          <div class="stat-value">
+
+            <span *ngIf="!loading">
+              {{ lowStockCount }}
+            </span>
+
+            <span
+              *ngIf="loading"
+              class="loading-value">
+
+              Loading...
+
+            </span>
+
+          </div>
+
+
+          <div class="stat-label">
+            Low Stock Products
+          </div>
+
+
+          <div class="stat-footer">
+
+            <span>
+              Need attention
+            </span>
+
+            <a routerLink="/products">
+              Check Stock →
+            </a>
+
+          </div>
+
+        </div>
+
+
+      </div>
+
+    </section>
+
+
+
+    <!-- ===================================================
+         RECENT BILLS
+         =================================================== -->
+
+    <section class="recent-section">
+
+      <div class="section-title">
+
+        <div>
+
+          <span class="section-label">
+            TRANSACTIONS
+          </span>
+
+          <h3>
+            Recent Bills
+          </h3>
+
+        </div>
+
+
+        <a
+          routerLink="/bill-history"
+          class="view-all-button">
+
+          View All Bills →
+
+        </a>
+
+      </div>
+
+
+      <div class="recent-card">
+
+
+        <!-- LOADING -->
+
+        <div
+          *ngIf="loading"
+          class="table-loading">
+
+          <div class="loading-spinner"></div>
+
+          <p>
+            Loading recent bills...
+          </p>
+
+        </div>
+
+
+        <!-- EMPTY -->
+
+        <div
+          *ngIf="
+            !loading &&
+            recentSales.length === 0
+          "
+          class="empty-state">
+
+          <div class="empty-icon">
+            🧾
+          </div>
+
+          <h4>
+            No Bills Found
+          </h4>
+
+          <p>
+            Create your first invoice to see it here.
+          </p>
+
+          <a
+            routerLink="/sales"
+            class="empty-button">
+
+            Create New Bill
+
+          </a>
+
+        </div>
+
+
+        <!-- TABLE -->
+
+        <div
+          *ngIf="
+            !loading &&
+            recentSales.length > 0
+          "
+          class="table-wrapper">
+
+          <table class="recent-table">
+
+            <thead>
+
+              <tr>
+
+                <th>
+                  Invoice No.
+                </th>
+
+                <th>
+                  Date
+                </th>
+
+                <th>
+                  Customer
+                </th>
+
+                <th>
+                  Amount
+                </th>
+
+                <th>
+                  Status
+                </th>
+
+                <th>
+                  Action
+                </th>
+
+              </tr>
+
+            </thead>
+
+
+            <tbody>
+
+              <tr
+                *ngFor="
+                  let sale of recentSales
+                ">
+
+                <td>
+
+                  <strong class="invoice-number">
+                    {{ getInvoiceNumber(sale) }}
+                  </strong>
+
+                </td>
+
+
+                <td>
+                  {{ formatDate(sale.invoice_date) }}
+                </td>
+
+
+                <td>
+
+                  <div class="customer-cell">
+
+                    <span class="customer-avatar">
+                      {{ getCustomerName(sale).charAt(0).toUpperCase() }}
+                    </span>
+
+                    <span>
+                      {{ getCustomerName(sale) }}
+                    </span>
+
+                  </div>
+
+                </td>
+
+
+                <td>
+
+                  <strong>
+                    {{ formatCurrency(getSaleTotal(sale)) }}
+                  </strong>
+
+                </td>
+
+
+                <td>
+
+                  <span
+                    class="status-badge"
+                    [ngClass]="{
+                      'paid-status':
+                        getPaymentStatus(sale) === 'Paid',
+
+                      'partial-status':
+                        getPaymentStatus(sale) === 'Partial',
+
+                      'pending-status':
+                        getPaymentStatus(sale) === 'Pending'
+                    }">
+
+                    {{ getPaymentStatus(sale) }}
+
+                  </span>
+
+                </td>
+
+
+                <td>
+
+                  <a
+                    routerLink="/bill-history"
+                    [queryParams]="{ id: sale.id }"
+                    class="view-button">
+
+                    View
+
+                  </a>
+
+                </td>
+
+              </tr>
+
+            </tbody>
+
+          </table>
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+
+    <!-- ===================================================
+         MANAGEMENT MODULES
+         =================================================== -->
+
+    <section class="section">
+
+      <div class="section-title">
+
+        <div>
+
+          <span class="section-label">
+            MANAGEMENT
+          </span>
+
+          <h3>
+            System Modules
+          </h3>
+
+        </div>
+
+      </div>
+
+
+      <div class="module-grid">
+
+
+        <!-- SALES -->
+
+        <a
+          routerLink="/sales"
+          class="module-card sales-card">
+
+          <div class="module-icon">
+            🧾
+          </div>
+
+          <div class="module-content">
+
+            <span class="module-number">
+              01
+            </span>
+
+            <h4>
+              Sales & Billing
+            </h4>
+
+            <p>
+              Create new invoices, add products,
+              calculate GST and complete sales.
+            </p>
+
+            <span class="module-link">
+              Open Sales →
+            </span>
+
+          </div>
+
+        </a>
+
+
+
+        <!-- CUSTOMERS -->
+
+        <a
+          routerLink="/customers"
+          class="module-card customers-card">
+
+          <div class="module-icon">
+            👥
+          </div>
+
+          <div class="module-content">
+
+            <span class="module-number">
+              02
+            </span>
+
+            <h4>
+              Customers
+            </h4>
+
+            <p>
+              Add and manage customer information,
+              contact details and GSTIN.
+            </p>
+
+            <span class="module-link">
+              Manage Customers →
+            </span>
+
+          </div>
+
+        </a>
+
+
+
+        <!-- PRODUCTS -->
+
+        <a
+          routerLink="/products"
+          class="module-card products-card">
+
+          <div class="module-icon">
+            📦
+          </div>
+
+          <div class="module-content">
+
+            <span class="module-number">
+              03
+            </span>
+
+            <h4>
+              Products
+            </h4>
+
+            <p>
+              Manage animal feed products,
+              prices, GST and stock quantity.
+            </p>
+
+            <span class="module-link">
+              Manage Products →
+            </span>
+
+          </div>
+
+        </a>
+
+
+
+        <!-- BILL HISTORY -->
+
+        <a
+          routerLink="/bill-history"
+          class="module-card history-card">
+
+          <div class="module-icon">
+            📚
+          </div>
+
+          <div class="module-content">
+
+            <span class="module-number">
+              04
+            </span>
+
+            <h4>
+              Bill History
+            </h4>
+
+            <p>
+              View previous invoices, print bills,
+              save PDF copies and manage records.
+            </p>
+
+            <span class="module-link">
+              View Bill History →
+            </span>
+
+          </div>
+
+        </a>
+
+
+
+        <!-- SETTINGS -->
+
+        <a
+          routerLink="/settings"
+          class="module-card settings-card">
+
+          <div class="module-icon">
+            ⚙️
+          </div>
+
+          <div class="module-content">
+
+            <span class="module-number">
+              05
+            </span>
+
+            <h4>
+              Settings
+            </h4>
+
+            <p>
+              Customize business name, address,
+              GSTIN, contact and bank details.
+            </p>
+
+            <span class="module-link">
+              Open Settings →
+            </span>
+
+          </div>
+
+        </a>
+
+
+
+        <!-- DASHBOARD -->
+
+        <a
+          routerLink="/dashboard"
+          class="module-card dashboard-card">
+
+          <div class="module-icon">
+            📊
+          </div>
+
+          <div class="module-content">
+
+            <span class="module-number">
+              06
+            </span>
+
+            <h4>
+              Dashboard
+            </h4>
+
+            <p>
+              View business statistics and quickly
+              navigate through the system.
+            </p>
+
+            <span class="module-link">
+              Dashboard →
+            </span>
+
+          </div>
+
+        </a>
+
+
+      </div>
+
+    </section>
+
+
+
+    <!-- ===================================================
+         QUICK ACTIONS
+         =================================================== -->
+
+    <section class="quick-section">
+
+      <div class="section-title">
+
+        <div>
+
+          <span class="section-label">
+            SHORTCUTS
+          </span>
+
+          <h3>
+            Quick Actions
+          </h3>
+
+        </div>
+
+      </div>
+
+
+      <div class="quick-grid">
+
+
+        <a
+          routerLink="/sales"
+          class="quick-card">
+
+          <div class="quick-icon sale-icon">
+            🧾
+          </div>
+
+          <div class="quick-text">
+
+            <strong>
+              New Sale
+            </strong>
+
+            <small>
+              Create a new invoice
+            </small>
+
+          </div>
+
+          <span class="quick-arrow">
+            →
+          </span>
+
+        </a>
+
+
+
+        <a
+          routerLink="/customers"
+          class="quick-card">
+
+          <div class="quick-icon customer-icon">
+            👤
+          </div>
+
+          <div class="quick-text">
+
+            <strong>
+              Add Customer
+            </strong>
+
+            <small>
+              Register a new customer
+            </small>
+
+          </div>
+
+          <span class="quick-arrow">
+            →
+          </span>
+
+        </a>
+
+
+
+        <a
+          routerLink="/products"
+          class="quick-card">
+
+          <div class="quick-icon product-icon">
+            📦
+          </div>
+
+          <div class="quick-text">
+
+            <strong>
+              Add Product
+            </strong>
+
+            <small>
+              Add a new feed product
+            </small>
+
+          </div>
+
+          <span class="quick-arrow">
+            →
+          </span>
+
+        </a>
+
+
+
+        <a
+          routerLink="/bill-history"
+          class="quick-card">
+
+          <div class="quick-icon history-icon">
+            📚
+          </div>
+
+          <div class="quick-text">
+
+            <strong>
+              Bill History
+            </strong>
+
+            <small>
+              View previous invoices
+            </small>
+
+          </div>
+
+          <span class="quick-arrow">
+            →
+          </span>
+
+        </a>
+
+
+
+        <a
+          routerLink="/settings"
+          class="quick-card">
+
+          <div class="quick-icon settings-icon">
+            ⚙️
+          </div>
+
+          <div class="quick-text">
+
+            <strong>
+              Settings
+            </strong>
+
+            <small>
+              Customize business details
+            </small>
+
+          </div>
+
+          <span class="quick-arrow">
+            →
+          </span>
+
+        </a>
+
+
+      </div>
+
+    </section>
+
+
+
+    <!-- ===================================================
+         INFORMATION
+         =================================================== -->
+
+    <section class="info-section">
+
+
+      <div class="info-card">
+
+        <div class="info-icon">
+          💡
+        </div>
+
+        <div class="info-content">
+
+          <h4>
+            Quick Tip
+          </h4>
+
+          <p>
+            Keep your customer and product information
+            updated. This information will automatically
+            be used while creating invoices.
+          </p>
+
+        </div>
+
+      </div>
+
+
+
+      <div class="info-card">
+
+        <div class="info-icon">
+          🏦
+        </div>
+
+        <div class="info-content">
+
+          <h4>
+            Invoice Information
+          </h4>
+
+          <p>
+            Business details saved in Settings can be
+            displayed on your invoices and printed bills.
+          </p>
+
+        </div>
+
+      </div>
+
+
+    </section>
+
+
+  </main>
+
+
+
+  <!-- =====================================================
+       FOOTER
+       ===================================================== -->
+
+  <footer class="dashboard-footer">
+
+    <div>
+
+      <strong>
+        Animal Feed Billing System
+      </strong>
+
+      <span> • </span>
+
+      <span>
+        Billing & Inventory Management 
+        by Narendra Shelke...
+      </span>
+
+    </div>
+
+
+    <div>
+
+      © {{ currentYear }}
+      All Rights Reserved
+
+    </div>
+
+  </footer>
+
+</div>
