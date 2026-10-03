@@ -1,0 +1,13 @@
+{
+  "name": "animal-feed-billing",
+  "version": "1.0.0",
+  "description": "Animal Feed Billing System",
+  "main": "backend/server.js",
+  "scripts": {
+    "build": "cd frontend && npm install && npm run build && cd ../backend && npm install",
+    "start": "cd backend && node server.js"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}
