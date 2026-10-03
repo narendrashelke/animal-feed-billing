@@ -1,0 +1,438 @@
+<div class="dashboard">
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+  
+      <div class="logo">
+        <div class="logo-icon">AF</div>
+  
+        <div>
+          <h2>Animal Feed</h2>
+          <span>Billing System</span>
+        </div>
+      </div>
+  
+      <nav>
+  
+        <a
+          class="nav-item active"
+          routerLink="/dashboard">
+          <span>▣</span>
+          Dashboard
+        </a>
+  
+        <a
+          class="nav-item"
+          routerLink="/customers">
+          <span>👤</span>
+          Customers
+        </a>
+  
+        <a
+          class="nav-item"
+          routerLink="/products">
+          <span>▤</span>
+          Products
+        </a>
+  
+        <a class="nav-item">
+          <span>🚚</span>
+          Suppliers
+        </a>
+  
+        <a class="nav-item">
+          <span>📦</span>
+          Purchases
+        </a>
+  
+        <a
+          class="nav-item"
+          routerLink="/sales">
+          <span>🧾</span>
+          Sales
+        </a>
+  
+        <a class="nav-item">
+          <span>💰</span>
+          Payments
+        </a>
+  
+        <a class="nav-item">
+          <span>📊</span>
+          Reports
+        </a>
+  
+      </nav>
+  
+      <div class="sidebar-bottom">
+  
+        <a class="nav-item">
+          <span>⚙</span>
+          Settings
+        </a>
+  
+        <a class="nav-item logout">
+          <span>↪</span>
+          Logout
+        </a>
+  
+      </div>
+  
+    </aside>
+  
+  
+    <!-- MAIN CONTENT -->
+    <main class="main-content">
+  
+      <!-- HEADER -->
+      <header class="topbar">
+  
+        <div>
+          <h1>Dashboard</h1>
+          <p>
+            Welcome back! Here's what's happening today.
+          </p>
+        </div>
+  
+        <div class="header-right">
+  
+          <button
+            type="button"
+            class="notification">
+            🔔
+            <span class="notification-dot"></span>
+          </button>
+  
+          <div class="user">
+  
+            <div class="avatar">
+              A
+            </div>
+  
+            <div class="user-info">
+              <strong>Admin</strong>
+              <span>Administrator</span>
+            </div>
+  
+          </div>
+  
+        </div>
+  
+      </header>
+  
+  
+      <!-- SUMMARY CARDS -->
+      <section class="summary-grid">
+  
+        <div class="summary-card sales-card">
+  
+          <div class="card-top">
+  
+            <div class="card-icon">
+              ₹
+            </div>
+  
+            <span class="card-label">
+              Today's Sales
+            </span>
+  
+          </div>
+  
+          <h2>₹0.00</h2>
+  
+          <p>
+            Today's total sales
+          </p>
+  
+        </div>
+  
+  
+        <div class="summary-card purchase-card">
+  
+          <div class="card-top">
+  
+            <div class="card-icon">
+              📦
+            </div>
+  
+            <span class="card-label">
+              Today's Purchases
+            </span>
+  
+          </div>
+  
+          <h2>₹0.00</h2>
+  
+          <p>
+            Today's total purchases
+          </p>
+  
+        </div>
+  
+  
+        <div
+          class="summary-card customer-card"
+          (click)="goToCustomers()"
+          role="button"
+          tabindex="0">
+  
+          <div class="card-top">
+  
+            <div class="card-icon">
+              👤
+            </div>
+  
+            <span class="card-label">
+              Customers
+            </span>
+  
+          </div>
+  
+          <h2>2</h2>
+  
+          <p>
+            Total registered customers
+          </p>
+  
+        </div>
+  
+  
+        <div
+          class="summary-card product-card"
+          (click)="goToProducts()"
+          role="button"
+          tabindex="0">
+  
+          <div class="card-top">
+  
+            <div class="card-icon">
+              ▤
+            </div>
+  
+            <span class="card-label">
+              Products
+            </span>
+  
+          </div>
+  
+          <h2>3</h2>
+  
+          <p>
+            Total products
+          </p>
+  
+        </div>
+  
+      </section>
+  
+  
+      <!-- CONTENT GRID -->
+      <section class="content-grid">
+  
+  
+        <!-- RECENT SALES -->
+        <div class="panel">
+  
+          <div class="panel-header">
+  
+            <div>
+  
+              <h2>
+                Recent Sales
+              </h2>
+  
+              <p>
+                Latest sales transactions
+              </p>
+  
+            </div>
+  
+            <button
+              type="button"
+              class="view-button"
+              (click)="goToSales()">
+  
+              View All
+  
+            </button>
+  
+          </div>
+  
+  
+          <div class="empty-state">
+  
+            <div class="empty-icon">
+              🧾
+            </div>
+  
+            <h3>
+              No sales yet
+            </h3>
+  
+            <p>
+              Sales transactions will appear here.
+            </p>
+  
+            <button
+              type="button"
+              class="primary-button"
+              (click)="goToSales()">
+  
+              + Create Sale
+  
+            </button>
+  
+          </div>
+  
+        </div>
+  
+  
+        <!-- LOW STOCK -->
+        <div class="panel">
+  
+          <div class="panel-header">
+  
+            <div>
+  
+              <h2>
+                Low Stock
+              </h2>
+  
+              <p>
+                Products requiring attention
+              </p>
+  
+            </div>
+  
+            <button
+              type="button"
+              class="view-button"
+              (click)="goToProducts()">
+  
+              View Products
+  
+            </button>
+  
+          </div>
+  
+  
+          <div class="empty-state">
+  
+            <div class="empty-icon">
+              ▤
+            </div>
+  
+            <h3>
+              Stock looks good
+            </h3>
+  
+            <p>
+              No products are currently below minimum stock.
+            </p>
+  
+          </div>
+  
+        </div>
+  
+      </section>
+  
+  
+      <!-- QUICK ACTIONS -->
+      <section class="quick-actions">
+  
+        <h2>
+          Quick Actions
+        </h2>
+  
+        <div class="action-grid">
+  
+  
+          <!-- NEW SALE -->
+          <button
+            type="button"
+            class="action-card"
+            (click)="goToSales()">
+  
+            <span>
+              🧾
+            </span>
+  
+            <strong>
+              New Sale
+            </strong>
+  
+            <small>
+              Create a new sales invoice
+            </small>
+  
+          </button>
+  
+  
+          <!-- NEW PURCHASE -->
+          <button
+            type="button"
+            class="action-card">
+  
+            <span>
+              📦
+            </span>
+  
+            <strong>
+              New Purchase
+            </strong>
+  
+            <small>
+              Record a supplier purchase
+            </small>
+  
+          </button>
+  
+  
+          <!-- ADD CUSTOMER -->
+          <button
+            type="button"
+            class="action-card"
+            (click)="goToCustomers()">
+  
+            <span>
+              👤
+            </span>
+  
+            <strong>
+              Add Customer
+            </strong>
+  
+            <small>
+              Register a new customer
+            </small>
+  
+          </button>
+  
+  
+          <!-- ADD PRODUCT -->
+          <button
+            type="button"
+            class="action-card"
+            (click)="goToProducts()">
+  
+            <span>
+              ▤
+            </span>
+  
+            <strong>
+              Add Product
+            </strong>
+  
+            <small>
+              Add a new feed product
+            </small>
+  
+          </button>
+  
+        </div>
+  
+      </section>
+  
+    </main>
+  
+  </div>
