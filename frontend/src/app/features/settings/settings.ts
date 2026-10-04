@@ -26,15 +26,15 @@ interface BusinessSettings {
 })
 export class Settings implements OnInit {
 
-  ownerName = '(Formerly known as Milklane Dairy Services Private Limited)';
-  businessName = 'INNOTERRA PRIVATE LIMITED';
-  address = 'Branch Office: Gat No. 1294/2/b/2/a/2, Laxmi Dahiwadi Mangalwedha (Taluka), Solapur';
-  city = 'Solapur';
+  ownerName = 'Narendra Shelke';
+  businessName = 'Shree Ganesh PashuKhadya Kendra';
+  address = 'At Post Umbare, Taluka Rahuri';
+  city = 'Umbare';
   state = 'Maharashtra';
-  pincode = '413305';
-  gstin = '27AAJCM9815D1ZA';
-  phone = '';
-  email = '';
+  pincode = '414105';
+  gstin = '27ABCDE1234F1ZH';
+  phone = '9100900933';
+  email = 'ganeshfeed@gmail.com';
   bankName = 'AXIS BANK';
   accountNumber = '926020019924761';
   ifscCode = 'UTIB0002097';

@@ -312,14 +312,14 @@ export class Payments implements OnInit {
   } | null = null;
 
   businessSettings = {
-    businessName: 'INNOTERRA PRIVATE LIMITED',
-    ownerName: '(Formerly known as Milklane Dairy Services Private Limited)',
-    address: 'Branch Office: Gat No. 1294/2/b/2/a/2, Laxmi Dahiwadi Mangalwedha (Taluka), Solapur',
-    city: 'Solapur',
+    businessName: 'Shree Ganesh PashuKhadya Kendra',
+    ownerName: 'Narendra Shelke',
+    address: 'At Post Umbare, Taluka Rahuri',
+    city: 'Umbare',
     state: 'Maharashtra',
-    pincode: '413305',
-    gstin: '27AAJCM9815D1ZA',
-    phone: ''
+    pincode: '414105',
+    gstin: '27ABCDE1234F1ZH',
+    phone: '9100900933'
   };
 
   openStatementModal(customerId: number): void {
