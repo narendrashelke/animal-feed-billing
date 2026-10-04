@@ -319,7 +319,7 @@ export class Payments implements OnInit {
     state: 'Maharashtra',
     pincode: '414105',
     gstin: '27ABCDE1234F1ZH',
-    phone: '9100900933'
+    phone: '9700900933'
   };
 
   openStatementModal(customerId: number): void {
