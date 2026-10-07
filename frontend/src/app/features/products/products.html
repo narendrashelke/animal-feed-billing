@@ -8,12 +8,22 @@
       <p>Manage animal feed products and stock</p>
     </div>
 
-    <button
-      type="button"
-      class="add-btn"
-      (click)="openForm()">
-      + Add Product
-    </button>
+    <div style="display: flex; gap: 10px;">
+      <button
+        type="button"
+        class="add-btn"
+        (click)="openImportModal()"
+        style="background-color: #0284c7; color: white;">
+        📥 Import / Bulk Upload
+      </button>
+
+      <button
+        type="button"
+        class="add-btn"
+        (click)="openForm()">
+        + Add Product
+      </button>
+    </div>
   </div>
 
   <!-- SUCCESS MESSAGE -->
@@ -57,13 +67,12 @@
       <div class="form-grid">
 
         <div class="form-group">
-          <label>Product Code *</label>
+          <label>Product Code (Auto-generated if empty)</label>
           <input
             type="text"
             name="product_code"
             [(ngModel)]="product.product_code"
-            placeholder="Example: CF003"
-            required>
+            placeholder="Auto-generated (e.g. PROD-123456)">
         </div>
 
         <div class="form-group">
@@ -533,11 +542,41 @@
                 </td>
               </tr>
             }
-
           }
-
         </tbody>
       </table>
+    </div>
+  </div>
+
+  <!-- BULK IMPORT MODAL -->
+  <div class="form-card" *ngIf="showImportModal" style="margin-top: 20px; border: 2px solid #0284c7;">
+    <div class="form-header">
+      <div>
+        <h2>📥 Bulk Import Products</h2>
+        <p>Upload a CSV file or paste product list (Format: Product Code, Product Name, Selling Rate, Purchase Rate, Initial Stock, UOM)</p>
+      </div>
+      <button class="close-btn" (click)="closeImportModal()">✕</button>
+    </div>
+
+    <div style="padding: 15px 0;">
+      <div style="display: flex; gap: 15px; margin-bottom: 15px; align-items: center;">
+        <input type="file" accept=".csv, .txt" (change)="onFileSelected($event)" style="padding: 6px; border: 1px solid #cbd5e1; border-radius: 4px;" />
+        <button type="button" (click)="downloadSampleCsv()" style="background: #f1f5f9; color: #0f172a; border: 1px solid #cbd5e1; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-weight: 500;">
+          📄 Download Sample CSV
+        </button>
+      </div>
+
+      <div class="form-group" style="margin-bottom: 15px;">
+        <label>CSV Data Preview / Manual Paste:</label>
+        <textarea [(ngModel)]="csvText" rows="6" placeholder="Product Code, Product Name, Selling Rate, Purchase Rate, Initial Stock, UOM&#10;PROD-001, Cattle Feed Supreme (50kg), 1450, 1250, 50, Bag" style="width: 100%; font-family: monospace; padding: 8px; border: 1px solid #cbd5e1; border-radius: 4px;"></textarea>
+      </div>
+
+      <div class="form-actions">
+        <button type="button" class="cancel-btn" (click)="closeImportModal()">Cancel</button>
+        <button type="button" class="save-btn" (click)="processImport()" [disabled]="importing" style="background: #0284c7;">
+          {{ importing ? 'Importing...' : '🚀 Start Import' }}
+        </button>
+      </div>
     </div>
   </div>
 

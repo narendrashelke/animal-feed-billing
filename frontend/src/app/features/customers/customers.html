@@ -8,9 +8,14 @@
         <p>Manage your animal feed customers</p>
       </div>
   
-      <button class="add-btn" (click)="openAddCustomer()">
-        + Add Customer
-      </button>
+      <div style="display: flex; gap: 10px;">
+        <button class="add-btn" (click)="openImportModal()" style="background-color: #0284c7; color: white;">
+          📥 Import / Bulk Upload
+        </button>
+        <button class="add-btn" (click)="openAddCustomer()">
+          + Add Customer
+        </button>
+      </div>
   
     </div>
   
@@ -36,14 +41,13 @@
   
           <!-- Customer Code -->
           <div class="form-group">
-            <label>Customer Code *</label>
+            <label>Customer Code (Auto-generated if empty)</label>
   
             <input
               type="text"
               name="customer_code"
               [(ngModel)]="customer.customer_code"
-              placeholder="Example: CUS002"
-              required
+              placeholder="Auto-generated (e.g. CUST-123456)"
             >
   
           </div>
@@ -309,4 +313,36 @@
   
     </div>
   
+    <!-- BULK IMPORT MODAL -->
+    <div class="form-card" *ngIf="showImportModal" style="margin-top: 20px; border: 2px solid #0284c7;">
+      <div class="form-header">
+        <div>
+          <h2>📥 Bulk Import Customers</h2>
+          <p>Upload a CSV file or paste customer list (Format: Customer Name, Mobile, Village, Address)</p>
+        </div>
+        <button class="close-btn" (click)="closeImportModal()">✕</button>
+      </div>
+
+      <div style="padding: 15px 0;">
+        <div style="display: flex; gap: 15px; margin-bottom: 15px; align-items: center;">
+          <input type="file" accept=".csv, .txt" (change)="onFileSelected($event)" style="padding: 6px; border: 1px solid #cbd5e1; border-radius: 4px;" />
+          <button type="button" (click)="downloadSampleCsv()" style="background: #f1f5f9; color: #0f172a; border: 1px solid #cbd5e1; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-weight: 500;">
+            📄 Download Sample CSV
+          </button>
+        </div>
+
+        <div class="form-group" style="margin-bottom: 15px;">
+          <label>CSV Data Preview / Manual Paste:</label>
+          <textarea [(ngModel)]="csvText" rows="6" placeholder="Customer Code, Customer Name, Mobile, Village, Address&#10;CUST-001, Ramesh Patil, 9822012345, Umbare, Main Road" style="width: 100%; font-family: monospace; padding: 8px; border: 1px solid #cbd5e1; border-radius: 4px;"></textarea>
+        </div>
+
+        <div class="form-actions">
+          <button type="button" class="cancel-btn" (click)="closeImportModal()">Cancel</button>
+          <button type="button" class="save-btn" (click)="processImport()" [disabled]="importing" style="background: #0284c7;">
+            {{ importing ? 'Importing...' : '🚀 Start Import' }}
+          </button>
+        </div>
+      </div>
+    </div>
+
   </div>

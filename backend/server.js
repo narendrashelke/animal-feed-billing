@@ -224,13 +224,51 @@ app.post('/api/customers', (req, res) => {
     `).get(result.lastInsertRowid);
 
     res.status(201).json(customer);
-  } catch (error) {
-    console.error('Error adding customer:', error);
+// BULK IMPORT CUSTOMERS
+app.post('/api/customers/import', (req, res) => {
+  try {
+    const { customers } = req.body;
+    if (!Array.isArray(customers) || customers.length === 0) {
+      return res.status(400).json({ error: 'Valid list of customers is required' });
+    }
 
-    res.status(500).json({
-      error: 'Failed to add customer',
-      details: error.message
+    const insertStmt = db.prepare(`
+      INSERT OR REPLACE INTO customers (
+        customer_code, name, mobile, email, address, village, taluka, district, state, state_code, pincode
+      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+    `);
+
+    let importedCount = 0;
+    const importTx = db.transaction((list) => {
+      list.forEach((c, index) => {
+        const code = c.customer_code || c.code || `CUST-${Date.now()}-${index + 1}`;
+        const name = c.name || c.customer_name || 'Customer ' + (index + 1);
+        insertStmt.run(
+          String(code).trim(),
+          String(name).trim(),
+          String(c.mobile || c.phone || '').trim(),
+          String(c.email || '').trim(),
+          String(c.address || '').trim(),
+          String(c.village || '').trim(),
+          String(c.taluka || '').trim(),
+          String(c.district || '').trim(),
+          String(c.state || 'Maharashtra').trim(),
+          String(c.state_code || '27').trim(),
+          String(c.pincode || '').trim()
+        );
+        importedCount++;
+      });
     });
+
+    importTx(customers);
+
+    res.status(200).json({
+      message: `Successfully imported ${importedCount} customer(s).`,
+      count: importedCount
+    });
+  } catch (error) {
+    console.error('Error importing customers:', error);
+    res.status(500).json({ error: 'Failed to import customers', details: error.message });
   }
 });
 
@@ -414,13 +452,51 @@ app.post('/api/products', (req, res) => {
     `).get(result.lastInsertRowid);
 
     res.status(201).json(product);
-  } catch (error) {
-    console.error('Error adding product:', error);
+// BULK IMPORT PRODUCTS
+app.post('/api/products/import', (req, res) => {
+  try {
+    const { products } = req.body;
+    if (!Array.isArray(products) || products.length === 0) {
+      return res.status(400).json({ error: 'Valid list of products is required' });
+    }
 
-    res.status(500).json({
-      error: 'Failed to add product',
-      details: error.message
+    const insertStmt = db.prepare(`
+      INSERT OR REPLACE INTO products (
+        product_code, product_name, category_id, hsn_code, uom, weight, purchase_rate, selling_rate, gst_rate, stock_quantity, minimum_stock
+      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+    `);
+
+    let importedCount = 0;
+    const importTx = db.transaction((list) => {
+      list.forEach((p, index) => {
+        const code = p.product_code || p.code || `PROD-${Date.now()}-${index + 1}`;
+        const name = p.product_name || p.name || 'Product ' + (index + 1);
+        insertStmt.run(
+          String(code).trim(),
+          String(name).trim(),
+          p.category_id || null,
+          String(p.hsn_code || '').trim(),
+          String(p.uom || 'Kg').trim(),
+          Number(p.weight) || 0,
+          Number(p.purchase_rate || p.rate) || 0,
+          Number(p.selling_rate || p.rate) || 0,
+          Number(p.gst_rate || p.gst) || 0,
+          Number(p.stock_quantity || p.stock) || 0,
+          Number(p.minimum_stock) || 0
+        );
+        importedCount++;
+      });
     });
+
+    importTx(products);
+
+    res.status(200).json({
+      message: `Successfully imported ${importedCount} product(s).`,
+      count: importedCount
+    });
+  } catch (error) {
+    console.error('Error importing products:', error);
+    res.status(500).json({ error: 'Failed to import products', details: error.message });
   }
 });
 

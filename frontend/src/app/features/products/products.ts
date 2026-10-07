@@ -219,12 +219,11 @@ export class Products implements OnInit {
     this.message = '';
     this.errorMessage = '';
 
-    if (!this.product.product_code.trim()) {
-      this.errorMessage = 'Please enter the product code.';
-      return;
+    if (!this.product.product_code || !this.product.product_code.trim()) {
+      this.product.product_code = 'PROD-' + String(Date.now()).slice(-6);
     }
 
-    if (!this.product.product_name.trim()) {
+    if (!this.product.product_name || !this.product.product_name.trim()) {
       this.errorMessage = 'Please enter the product name.';
       return;
     }
@@ -503,5 +502,118 @@ export class Products implements OnInit {
           this.cdr.detectChanges();
         }
       });
+  }
+
+  // ==============================
+  // BULK IMPORT PRODUCTS
+  // ==============================
+  showImportModal = false;
+  importing = false;
+  csvText = '';
+
+  openImportModal(): void {
+    this.csvText = '';
+    this.showImportModal = true;
+  }
+
+  closeImportModal(): void {
+    this.showImportModal = false;
+    this.csvText = '';
+  }
+
+  onFileSelected(event: any): void {
+    const file = event.target.files[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = (e: any) => {
+      this.csvText = e.target.result || '';
+      this.cdr.detectChanges();
+    };
+    reader.readAsText(file);
+  }
+
+  processImport(): void {
+    if (!this.csvText.trim()) {
+      alert('Please select a CSV file or paste CSV data.');
+      return;
+    }
+
+    const lines = this.csvText.trim().split(/\r?\n/);
+    if (lines.length === 0) {
+      alert('No valid data lines found in CSV.');
+      return;
+    }
+
+    const parsedProducts: any[] = [];
+    const hasHeader = lines[0].toLowerCase().includes('name') || lines[0].toLowerCase().includes('code') || lines[0].toLowerCase().includes('rate');
+    const startIdx = hasHeader ? 1 : 0;
+
+    for (let i = startIdx; i < lines.length; i++) {
+      const line = lines[i].trim();
+      if (!line) continue;
+      const cols = line.split(/[,;\t]/).map(c => c.trim().replace(/^["']|["']$/g, ''));
+
+      if (cols.length === 1) {
+        parsedProducts.push({ product_name: cols[0], selling_rate: 0, purchase_rate: 0, stock_quantity: 0 });
+      } else if (cols.length >= 2) {
+        let code = '';
+        let name = '';
+        let selling_rate = 0;
+        let purchase_rate = 0;
+        let stock_quantity = 0;
+        let uom = 'Bag';
+        let hsn_code = '';
+
+        if (!isNaN(Number(cols[1])) && isNaN(Number(cols[0]))) {
+          name = cols[0];
+          selling_rate = Number(cols[1]) || 0;
+          if (cols[2]) purchase_rate = Number(cols[2]) || 0;
+          if (cols[3]) stock_quantity = Number(cols[3]) || 0;
+          if (cols[4]) uom = cols[4];
+        } else {
+          code = cols[0];
+          name = cols[1];
+          if (cols[2]) selling_rate = Number(cols[2]) || 0;
+          if (cols[3]) purchase_rate = Number(cols[3]) || 0;
+          if (cols[4]) stock_quantity = Number(cols[4]) || 0;
+          if (cols[5]) uom = cols[5];
+        }
+
+        parsedProducts.push({ product_code: code, product_name: name, selling_rate, purchase_rate, stock_quantity, uom, hsn_code });
+      }
+    }
+
+    if (parsedProducts.length === 0) {
+      alert('Could not parse any products from file.');
+      return;
+    }
+
+    this.importing = true;
+    this.http.post<any>(`${this.apiUrl}/products/import`, { products: parsedProducts }).subscribe({
+      next: (res) => {
+        alert(res?.message || `Successfully imported ${parsedProducts.length} product(s)!`);
+        this.importing = false;
+        this.closeImportModal();
+        this.loadProducts();
+      },
+      error: (err) => {
+        console.error('Import error:', err);
+        alert(err?.error?.error || 'Failed to import products.');
+        this.importing = false;
+        this.cdr.detectChanges();
+      }
+    });
+  }
+
+  downloadSampleCsv(): void {
+    const sample = "Product Code, Product Name, Selling Rate, Purchase Rate, Initial Stock, UOM\nPROD-001, Cattle Feed Supreme (50kg), 1450, 1250, 50, Bag\nPROD-002, Calf Growth Powder (1kg), 350, 280, 20, Packet";
+    const blob = new Blob([sample], { type: 'text/csv' });
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'sample_products.csv';
+    a.click();
+    window.URL.revokeObjectURL(url);
   }
 }
