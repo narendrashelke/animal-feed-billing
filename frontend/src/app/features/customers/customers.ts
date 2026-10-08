@@ -55,11 +55,18 @@ export class Customers implements OnInit {
     this.loadCustomers();
   }
 
+  private get apiUrl(): string {
+    if (typeof window !== 'undefined' && window.location.port === '4200') {
+      return 'http://localhost:5000/api';
+    }
+    return '/api';
+  }
+
   loadCustomers(): void {
 
     console.log('Loading customers...');
 
-    this.http.get<any[]>('http://localhost:5000/api/customers')
+    this.http.get<any[]>(`${this.apiUrl}/customers`)
       .subscribe({
 
         next: (data) => {
@@ -144,7 +151,7 @@ export class Customers implements OnInit {
 
     if (this.isEditing && this.editingCustomerId) {
       this.http.put<any>(
-        `http://localhost:5000/api/customers/${this.editingCustomerId}`,
+        `${this.apiUrl}/customers/${this.editingCustomerId}`,
         this.customer
       ).subscribe({
         next: (res) => {
@@ -163,7 +170,7 @@ export class Customers implements OnInit {
       });
     } else {
       this.http.post(
-        'http://localhost:5000/api/customers',
+        `${this.apiUrl}/customers`,
         this.customer
       ).subscribe({
         next: () => {
@@ -196,7 +203,7 @@ export class Customers implements OnInit {
       return;
     }
 
-    this.http.delete<any>(`http://localhost:5000/api/customers/${item.id}`)
+    this.http.delete<any>(`${this.apiUrl}/customers/${item.id}`)
       .subscribe({
         next: (res) => {
           alert(res?.message || 'Customer deleted successfully.');
@@ -288,7 +295,7 @@ export class Customers implements OnInit {
     }
 
     this.importing = true;
-    this.http.post<any>('http://localhost:5000/api/customers/import', { customers: parsedCustomers }).subscribe({
+    this.http.post<any>(`${this.apiUrl}/customers/import`, { customers: parsedCustomers }).subscribe({
       next: (res) => {
         alert(res?.message || `Successfully imported ${parsedCustomers.length} customer(s)!`);
         this.importing = false;

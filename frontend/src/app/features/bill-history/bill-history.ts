@@ -136,7 +136,12 @@ export class BillHistory implements OnInit {
      API
   ======================================================= */
 
-  private readonly apiUrl = 'http://localhost:5000/api';
+  private get apiUrl(): string {
+    if (typeof window !== 'undefined' && window.location.port === '4200') {
+      return 'http://localhost:5000/api';
+    }
+    return '/api';
+  }
 
   /* =======================================================
      BILL DATA

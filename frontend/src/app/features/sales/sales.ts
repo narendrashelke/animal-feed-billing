@@ -69,7 +69,12 @@ interface BusinessSettings {
 })
 export class Sales implements OnInit {
 
-  private readonly API_URL = 'http://localhost:5000/api';
+  private get API_URL(): string {
+    if (typeof window !== 'undefined' && window.location.port === '4200') {
+      return 'http://localhost:5000/api';
+    }
+    return '/api';
+  }
 
   customers: Customer[] = [];
   products: Product[] = [];

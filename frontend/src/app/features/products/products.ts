@@ -47,7 +47,12 @@ type InventoryAction = 'STOCK_IN' | 'ADJUSTMENT';
 })
 export class Products implements OnInit {
 
-  private apiUrl = 'http://localhost:5000/api';
+  private get apiUrl(): string {
+    if (typeof window !== 'undefined' && window.location.port === '4200') {
+      return 'http://localhost:5000/api';
+    }
+    return '/api';
+  }
 
   // ==============================
   // PRODUCTS
