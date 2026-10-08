@@ -220,6 +220,14 @@ app.post('/api/customers', (req, res) => {
     `).get(result.lastInsertRowid);
 
     res.status(201).json(customer);
+  } catch (error) {
+    if (error.message && error.message.includes('UNIQUE constraint failed')) {
+      return res.status(409).json({ error: 'Customer code already exists' });
+    }
+    console.error('Error adding customer:', error);
+    res.status(500).json({ error: 'Failed to add customer', details: error.message });
+  }
+});
 // BULK IMPORT CUSTOMERS
 app.post('/api/customers/import', (req, res) => {
   try {
@@ -448,6 +456,14 @@ app.post('/api/products', (req, res) => {
     `).get(result.lastInsertRowid);
 
     res.status(201).json(product);
+  } catch (error) {
+    if (error.message && error.message.includes('UNIQUE constraint failed')) {
+      return res.status(409).json({ error: 'Product code already exists' });
+    }
+    console.error('Error adding product:', error);
+    res.status(500).json({ error: 'Failed to add product', details: error.message });
+  }
+});
 // BULK IMPORT PRODUCTS
 app.post('/api/products/import', (req, res) => {
   try {
