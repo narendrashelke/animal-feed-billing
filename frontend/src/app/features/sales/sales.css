@@ -737,7 +737,7 @@
 
   @page {
     size: A4 portrait;
-    margin: 8mm;
+    margin: 5mm;
   }
 
   * {
@@ -757,7 +757,11 @@
     print-color-adjust: exact;
   }
 
-  .no-print {
+  .no-print,
+  .screen-header,
+  .entry-area,
+  .screen-total,
+  .message {
     display: none !important;
   }
 
@@ -772,12 +776,122 @@
     max-width: 100% !important;
     min-height: 0 !important;
     height: auto !important;
+    max-height: 280mm !important;
     margin: 0 !important;
     border: 1px solid #222 !important;
     box-shadow: none !important;
     box-sizing: border-box !important;
     page-break-after: avoid !important;
+    page-break-inside: avoid !important;
     break-after: avoid !important;
+    break-inside: avoid !important;
+  }
+
+  .company-header {
+    min-height: 65px !important;
+    padding: 4px 8px !important;
+  }
+
+  .company-header h1 {
+    font-size: 16px !important;
+    margin: 0 !important;
+  }
+
+  .company-details div {
+    font-size: 10px !important;
+    line-height: 1.2 !important;
+  }
+
+  .bill-title {
+    height: 24px !important;
+    font-size: 13px !important;
+  }
+
+  .info-left, .info-right {
+    padding: 4px 8px !important;
+    min-height: 38px !important;
+    font-size: 10.5px !important;
+  }
+
+  .info-left div, .info-right div {
+    margin-bottom: 2px !important;
+  }
+
+  .customer-heading-grid > div {
+    padding: 4px 8px !important;
+    font-size: 11px !important;
+  }
+
+  .customer-box {
+    min-height: 65px !important;
+    padding: 5px 8px !important;
+    font-size: 10px !important;
+    line-height: 1.3 !important;
+  }
+
+  .customer-box strong {
+    font-size: 11.5px !important;
+    margin-bottom: 2px !important;
+  }
+
+  .invoice-table th,
+  .invoice-table td {
+    padding: 4px 5px !important;
+    font-size: 10px !important;
+  }
+
+  .product-code {
+    font-size: 8.5px !important;
+    margin-top: 1px !important;
+  }
+
+  .amount-words {
+    padding: 6px 8px !important;
+    min-height: 50px !important;
+    font-size: 10px !important;
+  }
+
+  .amount-words p {
+    margin: 3px 0 0 !important;
+    font-size: 10px !important;
+  }
+
+  .tax-summary > div {
+    min-height: 24px !important;
+    padding: 3px 8px !important;
+    font-size: 10px !important;
+  }
+
+  .tax-summary .after-tax {
+    min-height: 38px !important;
+    font-size: 11px !important;
+  }
+
+  .bottom-box {
+    min-height: 75px !important;
+    font-size: 9.5px !important;
+  }
+
+  .bottom-title {
+    min-height: 24px !important;
+    padding: 2px 4px !important;
+    font-size: 10px !important;
+  }
+
+  .bottom-content {
+    padding: 5px !important;
+    line-height: 1.25 !important;
+    font-size: 9.5px !important;
+  }
+
+  .signature {
+    padding: 5px !important;
+    font-size: 10px !important;
+  }
+
+  .signature-space {
+    margin-top: 25px !important;
+    font-size: 9.5px !important;
   }
 
   .company-header,
@@ -788,10 +902,6 @@
   .bottom-grid {
     page-break-inside: avoid !important;
     break-inside: avoid !important;
-  }
-
-  .invoice-table {
-    page-break-inside: auto;
   }
 
   .invoice-table tr {
