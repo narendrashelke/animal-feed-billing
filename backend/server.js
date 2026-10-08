@@ -1876,6 +1876,47 @@ app.get('/api/payments/statement/:customer_id', (req, res) => {
 });
 
 // ======================================================
+// ADMIN RESET DATA
+// ======================================================
+
+app.post('/api/admin/reset-data', (req, res) => {
+  try {
+    const clearTables = [
+      'sale_items',
+      'sales',
+      'customer_payments',
+      'supplier_payments',
+      'stock_movements',
+      'stock_transactions',
+      'purchase_items',
+      'purchases',
+      'customers',
+      'products',
+      'categories',
+      'suppliers'
+    ];
+
+    const resetTx = db.transaction(() => {
+      clearTables.forEach(table => {
+        try {
+          db.prepare(`DELETE FROM ${table}`).run();
+          try {
+            db.prepare(`DELETE FROM sqlite_sequence WHERE name=?`).run(table);
+          } catch (e) {}
+        } catch (err) {}
+      });
+    });
+
+    resetTx();
+
+    res.json({ message: 'All transactions, customers, products, and movements cleared successfully.' });
+  } catch (error) {
+    console.error('Error resetting database:', error);
+    res.status(500).json({ error: 'Failed to reset database data', details: error.message });
+  }
+});
+
+// ======================================================
 // SERVE PRODUCTION FRONTEND BUILD
 // ======================================================
 
