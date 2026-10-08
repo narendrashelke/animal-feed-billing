@@ -175,24 +175,14 @@
 .invoice-paper {
   width: 210mm;
   min-height: 297mm;
-
   margin: 0 auto;
-
   background: white;
-
   box-sizing: border-box;
-
-  border: 1px solid #222;
-
-  box-shadow:
-    0 4px 20px rgba(0, 0, 0, 0.15);
-
-  font-family:
-    Arial,
-    Helvetica,
-    sans-serif;
-
-  font-size: 12px;
+  border: 1.5px solid #000;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 11px;
+  color: #000;
 }
 
 
@@ -201,47 +191,49 @@
    ========================================================= */
 
 .company-header {
-  min-height: 95px;
-
+  min-height: 90px;
   display: grid;
-  grid-template-columns: 150px 1fr;
-
-  border-bottom: 1px solid #222;
+  grid-template-columns: 140px 1fr;
+  border-bottom: 1px solid #000;
 }
 
 .company-logo {
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 28px;
+  font-size: 24px;
   font-weight: 800;
-  color: #333;
+  color: #000;
   padding: 6px;
   overflow: hidden;
   box-sizing: border-box;
+  border-right: 1px solid #000;
 }
 
 .ganesha-logo,
 .company-logo img {
-  max-width: 95px;
-  max-height: 95px;
+  max-width: 90px;
+  max-height: 90px;
   object-fit: contain;
 }
 
 .company-details {
   text-align: center;
-  padding: 8px 16px;
-  line-height: 1.4;
+  padding: 6px 12px;
+  line-height: 1.35;
+  color: #000;
 }
 
 .company-details h1 {
-  margin: 0 0 3px;
-  font-size: 18px;
+  margin: 0 0 2px;
+  font-size: 16px;
   font-weight: 800;
+  color: #000;
+  text-transform: uppercase;
 }
 
 .gst-line {
-  margin-top: 3px;
+  margin-top: 2px;
   font-weight: 700;
 }
 
@@ -251,16 +243,16 @@
    ========================================================= */
 
 .bill-title {
-  height: 36px;
-
+  height: 30px;
   display: flex;
   align-items: center;
   justify-content: center;
-
-  border-bottom: 1px solid #222;
-
-  font-size: 14px;
+  border-bottom: 1px solid #000;
+  font-size: 13px;
   font-weight: 800;
+  letter-spacing: 0.5px;
+  color: #000;
+  background: #fbfbfb;
 }
 
 
@@ -271,31 +263,32 @@
 .invoice-info-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
-
-  border-bottom: 1px solid #222;
+  border-bottom: 1px solid #000;
 }
 
 .info-left,
 .info-right {
-  padding: 8px 12px;
-  min-height: 55px;
+  padding: 6px 10px;
+  min-height: 50px;
   box-sizing: border-box;
 }
 
 .info-right {
-  border-left: 1px solid #222;
+  border-left: 1px solid #000;
 }
 
 .info-left div,
 .info-right div {
   display: grid;
-  grid-template-columns: 145px 1fr;
-  margin-bottom: 4px;
+  grid-template-columns: 135px 1fr;
+  margin-bottom: 3px;
+  color: #000;
 }
 
 .info-left strong,
 .info-right strong {
   font-weight: 700;
+  color: #000;
 }
 
 
@@ -306,17 +299,19 @@
 .customer-heading-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
-
-  border-bottom: 1px solid #222;
+  border-bottom: 1px solid #000;
+  background: #fbfbfb;
 }
 
 .customer-heading-grid > div {
-  padding: 7px 12px;
+  padding: 5px 10px;
   font-weight: 700;
+  font-size: 11.5px;
+  color: #000;
 }
 
 .customer-heading-grid > div + div {
-  border-left: 1px solid #222;
+  border-left: 1px solid #000;
 }
 
 
@@ -327,28 +322,28 @@
 .customer-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
-
-  border-bottom: 1px solid #222;
+  border-bottom: 1px solid #000;
 }
 
 .customer-box {
-  min-height: 100px;
-
-  padding: 10px 12px;
-
+  min-height: 90px;
+  padding: 8px 10px;
   box-sizing: border-box;
-
-  line-height: 1.5;
+  line-height: 1.4;
+  color: #000;
 }
 
 .customer-box + .customer-box {
-  border-left: 1px solid #222;
+  border-left: 1px solid #000;
 }
 
 .customer-box strong {
   display: block;
-  margin-bottom: 4px;
-  font-size: 13px;
+  margin-bottom: 3px;
+  font-size: 12px;
+  font-weight: 800;
+  color: #000;
+  text-transform: uppercase;
 }
 
 
@@ -364,12 +359,12 @@
 
 .invoice-table th,
 .invoice-table td {
-  border-right: 1px solid #222;
-  border-bottom: 1px solid #222;
-
-  padding: 8px 7px;
-
+  border-right: 1px solid #000;
+  border-bottom: 1px solid #000;
+  padding: 6px 6px;
   vertical-align: middle;
+  color: #000;
+  font-size: 11px;
 }
 
 .invoice-table th:last-child,
@@ -381,6 +376,7 @@
   background: #f8fafc;
   text-align: center;
   font-weight: 700;
+  color: #000;
 }
 
 .invoice-table .sr-column {
@@ -388,7 +384,7 @@
 }
 
 .invoice-table .description-column {
-  width: 31%;
+  width: 34%;
 }
 
 .invoice-table th:nth-child(3) {
@@ -396,11 +392,11 @@
 }
 
 .invoice-table th:nth-child(4) {
-  width: 55px;
+  width: 50px;
 }
 
 .invoice-table th:nth-child(5) {
-  width: 55px;
+  width: 50px;
 }
 
 .invoice-table th:nth-child(6) {
@@ -408,11 +404,11 @@
 }
 
 .invoice-table th:nth-child(7) {
-  width: 105px;
+  width: 100px;
 }
 
 .action-column {
-  width: 70px;
+  width: 65px;
 }
 
 .description {
@@ -420,8 +416,8 @@
 }
 
 .product-code {
-  margin-top: 3px;
-  color: #64748b;
+  margin-top: 2px;
+  color: #475569;
   font-size: 9px;
 }
 
@@ -440,7 +436,7 @@
 
 .empty-row {
   text-align: center;
-  padding: 20px;
+  padding: 18px;
   color: #64748b;
 }
 
@@ -456,16 +452,12 @@
 
 .remove-btn {
   border: none;
-  border-radius: 5px;
-
-  padding: 6px 8px;
-
+  border-radius: 4px;
+  padding: 4px 6px;
   background: #fee2e2;
   color: #b91c1c;
-
   cursor: pointer;
-
-  font-size: 11px;
+  font-size: 10.5px;
   font-weight: 700;
 }
 
@@ -476,46 +468,50 @@
 
 .amount-summary-grid {
   display: grid;
-  grid-template-columns: 1fr 270px;
-
-  border-bottom: 1px solid #222;
+  grid-template-columns: 1fr 260px;
+  border-bottom: 1px solid #000;
 }
 
 .amount-words {
-  padding: 14px;
-  min-height: 100px;
+  padding: 10px;
+  min-height: 75px;
   box-sizing: border-box;
+}
+
+.amount-words strong {
+  font-weight: 700;
+  color: #000;
 }
 
 .amount-words p {
-  margin: 10px 0 0;
+  margin: 6px 0 0;
   font-weight: 700;
-  line-height: 1.5;
+  line-height: 1.4;
+  color: #000;
 }
 
 .tax-summary {
-  border-left: 1px solid #222;
+  border-left: 1px solid #000;
 }
 
 .tax-summary > div {
-  min-height: 43px;
-
+  min-height: 32px;
   display: flex;
   align-items: center;
   justify-content: space-between;
-
-  padding: 8px 12px;
-
+  padding: 5px 10px;
   box-sizing: border-box;
+  color: #000;
 }
 
 .tax-summary .after-tax {
-  border-top: 1px solid #222;
-  min-height: 65px;
+  border-top: 1px solid #000;
+  min-height: 48px;
+  font-weight: 800;
 }
 
 .after-tax span {
-  text-align: center;
+  text-align: left;
   font-weight: 700;
 }
 
@@ -530,10 +526,8 @@
 }
 
 .bottom-box {
-  min-height: 120px;
-
-  border-right: 1px solid #222;
-
+  min-height: 100px;
+  border-right: 1px solid #000;
   box-sizing: border-box;
 }
 
@@ -542,25 +536,24 @@
 }
 
 .bottom-title {
-  min-height: 38px;
-
+  min-height: 30px;
   display: flex;
   align-items: center;
   justify-content: center;
-
   text-align: center;
-
-  border-bottom: 1px solid #222;
-
+  border-bottom: 1px solid #000;
   font-weight: 700;
-  padding: 5px;
+  padding: 4px;
   box-sizing: border-box;
+  color: #000;
+  background: #fbfbfb;
 }
 
 .bottom-content {
-  padding: 15px;
-  line-height: 1.7;
+  padding: 10px;
+  line-height: 1.5;
   text-align: center;
+  color: #000;
 }
 
 .terms {
@@ -572,13 +565,15 @@
 }
 
 .signature {
-  padding: 12px;
+  padding: 8px;
   font-weight: 700;
+  color: #000;
 }
 
 .signature-space {
-  margin-top: 55px;
-  font-size: 11px;
+  margin-top: 40px;
+  font-size: 10.5px;
+  color: #000;
 }
 
 

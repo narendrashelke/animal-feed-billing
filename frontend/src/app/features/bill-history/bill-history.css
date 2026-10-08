@@ -285,18 +285,18 @@
 
 
 /* =========================================================
-   A4 PAGE
+   A4 PAGE (EXACT MATCH TO REFERENCE PHOTO MEDIA_1791472489962)
 ========================================================= */
 
 .invoice-page {
   width: 210mm;
   min-height: 297mm;
   box-sizing: border-box;
-  padding: 8mm;
   background: #fff;
-  color: #222;
+  border: 1.5px solid #000;
+  color: #000;
   font-family: Arial, Helvetica, sans-serif;
-  font-size: 10px;
+  font-size: 11px;
 }
 
 
@@ -306,9 +306,9 @@
 
 .company-header {
   display: grid;
-  grid-template-columns: 35mm 1fr;
-  min-height: 32mm;
-  border: 1px solid #222;
+  grid-template-columns: 140px 1fr;
+  min-height: 90px;
+  border-bottom: 1px solid #000;
   box-sizing: border-box;
 }
 
@@ -316,36 +316,37 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 4mm;
+  padding: 6px;
   box-sizing: border-box;
   overflow: hidden;
-  max-width: 35mm;
-  max-height: 32mm;
+  border-right: 1px solid #000;
 }
 
 .ganesha-logo {
-  max-width: 25mm;
-  max-height: 28mm;
+  max-width: 90px;
+  max-height: 90px;
   width: auto;
   height: auto;
   object-fit: contain;
 }
 
 .company-details {
-  padding: 4mm 8mm;
+  padding: 6px 12px;
   text-align: center;
-  line-height: 1.45;
+  line-height: 1.35;
+  color: #000;
 }
 
 .company-name {
   margin-bottom: 2px;
-  font-size: 15px;
-  font-weight: bold;
+  font-size: 16px;
+  font-weight: 800;
   text-transform: uppercase;
+  color: #000;
 }
 
 .owner-name {
-  font-weight: bold;
+  font-weight: 700;
 }
 
 
@@ -354,16 +355,17 @@
 ========================================================= */
 
 .bill-title {
-  height: 10mm;
+  height: 30px;
   display: flex;
   align-items: center;
   justify-content: center;
   box-sizing: border-box;
-  border-left: 1px solid #222;
-  border-right: 1px solid #222;
-  border-bottom: 1px solid #222;
+  border-bottom: 1px solid #000;
   font-size: 13px;
-  font-weight: bold;
+  font-weight: 800;
+  letter-spacing: 0.5px;
+  background: #fbfbfb;
+  color: #000;
 }
 
 
@@ -374,40 +376,34 @@
 .invoice-information {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  border-left: 1px solid #222;
-  border-right: 1px solid #222;
-  border-bottom: 1px solid #222;
-}
-
-.invoice-info-left {
-  border-right: 1px solid #222;
+  border-bottom: 1px solid #000;
 }
 
 .invoice-info-left,
 .invoice-info-right {
-  min-height: 25mm;
+  min-height: 50px;
+  padding: 6px 10px;
+  box-sizing: border-box;
+}
+
+.invoice-info-right {
+  border-left: 1px solid #000;
 }
 
 .info-line {
   display: grid;
-  grid-template-columns: 48% 52%;
-  min-height: 7mm;
-  border-bottom: 1px solid #ddd;
-  box-sizing: border-box;
+  grid-template-columns: 135px 1fr;
+  margin-bottom: 3px;
+  color: #000;
 }
 
-.info-line:last-child {
-  border-bottom: 0;
-}
-
-.info-line span,
-.info-line strong {
-  padding: 4px 7px;
-  box-sizing: border-box;
+.info-line span {
+  font-weight: 400;
 }
 
 .info-line strong {
-  font-weight: normal;
+  font-weight: 700;
+  color: #000;
 }
 
 
@@ -418,18 +414,19 @@
 .customer-heading-row {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  border-left: 1px solid #222;
-  border-right: 1px solid #222;
-  border-bottom: 1px solid #222;
+  border-bottom: 1px solid #000;
+  background: #fbfbfb;
 }
 
 .customer-heading-row div {
-  padding: 7px;
-  font-weight: bold;
+  padding: 5px 10px;
+  font-weight: 700;
+  font-size: 11.5px;
+  color: #000;
 }
 
 .customer-heading-row div:first-child {
-  border-right: 1px solid #222;
+  border-right: 1px solid #000;
 }
 
 
@@ -440,26 +437,28 @@
 .customer-details-row {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  border-left: 1px solid #222;
-  border-right: 1px solid #222;
-  border-bottom: 1px solid #222;
+  border-bottom: 1px solid #000;
 }
 
 .customer-box {
-  min-height: 43mm;
-  padding: 8px;
+  min-height: 90px;
+  padding: 8px 10px;
   box-sizing: border-box;
-  line-height: 1.5;
+  line-height: 1.4;
+  color: #000;
 }
 
 .customer-box:first-child {
-  border-right: 1px solid #222;
+  border-right: 1px solid #000;
 }
 
 .customer-name {
   display: block;
   margin-bottom: 3px;
-  font-size: 11px;
+  font-size: 12px;
+  font-weight: 800;
+  color: #000;
+  text-transform: uppercase;
 }
 
 
@@ -475,49 +474,58 @@
 
 .product-table th,
 .product-table td {
-  border: 1px solid #222;
-  box-sizing: border-box;
+  border-right: 1px solid #000;
+  border-bottom: 1px solid #000;
+  padding: 6px 6px;
+  vertical-align: middle;
+  color: #000;
+  font-size: 11px;
+}
+
+.product-table th:last-child,
+.product-table td:last-child {
+  border-right: none;
 }
 
 .product-table th {
-  height: 10mm;
+  height: 28px;
   padding: 4px;
   text-align: center;
-  font-weight: bold;
-  background: #fafafa;
+  font-weight: 700;
+  background: #f8fafc;
+  color: #000;
 }
 
 .product-table td {
-  height: 9mm;
-  padding: 5px 4px;
+  height: 24px;
 }
 
 .sr-column {
-  width: 10mm;
+  width: 35px;
 }
 
 .description-column {
-  width: 67mm;
+  width: 34%;
 }
 
 .hsn-column {
-  width: 29mm;
+  width: 85px;
 }
 
 .uom-column {
-  width: 18mm;
+  width: 50px;
 }
 
 .qty-column {
-  width: 17mm;
+  width: 50px;
 }
 
 .rate-column {
-  width: 25mm;
+  width: 85px;
 }
 
 .amount-column {
-  width: 30mm;
+  width: 100px;
 }
 
 .center {
@@ -529,25 +537,13 @@
 }
 
 .description-cell {
-  font-weight: normal;
+  font-weight: 500;
   word-wrap: break-word;
 }
 
-.empty-product-row td {
-  height: 8mm;
-}
-
 .product-total-row td {
-  height: 12mm;
-  vertical-align: middle;
-}
-
-.total-label {
-  text-align: right;
-}
-
-.total-qty {
-  text-align: center;
+  background: #fafafa;
+  font-weight: 700;
 }
 
 
@@ -557,109 +553,155 @@
 
 .amount-summary {
   display: grid;
-  grid-template-columns: 1fr 60mm;
-  border-left: 1px solid #222;
-  border-right: 1px solid #222;
-  border-bottom: 1px solid #222;
+  grid-template-columns: 1fr 260px;
+  border-bottom: 1px solid #000;
 }
 
 .amount-words {
-  min-height: 30mm;
-  padding: 8px;
+  padding: 10px;
+  min-height: 75px;
   box-sizing: border-box;
 }
 
+.amount-words strong {
+  font-weight: 700;
+  color: #000;
+}
+
 .words-value {
-  margin-top: 9px;
-  font-weight: bold;
+  margin-top: 6px;
+  font-weight: 700;
   text-transform: uppercase;
-  line-height: 1.5;
+  line-height: 1.4;
+  color: #000;
 }
 
 .amount-right {
-  border-left: 1px solid #222;
+  border-left: 1px solid #000;
 }
 
 .amount-line {
-  min-height: 12mm;
-  display: grid;
-  grid-template-columns: 1fr 1fr;
+  min-height: 32px;
+  display: flex;
   align-items: center;
+  justify-content: space-between;
+  padding: 5px 10px;
+  box-sizing: border-box;
+  color: #000;
   border-bottom: 1px solid #ddd;
 }
 
-.amount-line span {
-  padding: 5px 8px;
-}
-
-.amount-line strong {
-  padding: 5px 8px;
-  text-align: right;
-  font-weight: normal;
+.amount-line:last-child {
+  border-bottom: none;
 }
 
 .final-amount {
-  min-height: 18mm;
-  border-bottom: 0;
+  border-top: 1px solid #000;
+  border-bottom: none;
+  min-height: 48px;
+  font-weight: 800;
 }
 
 .final-amount span {
-  text-align: center;
-  font-weight: bold;
+  text-align: left;
+  font-weight: 700;
 }
 
 .final-amount strong {
-  font-size: 11px;
-  font-weight: bold;
+  font-size: 12px;
+  font-weight: 800;
 }
 
 
 /* =========================================================
-   BOTTOM SECTION
+   BOTTOM SECTION (3 COLUMNS)
 ========================================================= */
 
 .bottom-three-columns {
   display: grid;
-  grid-template-columns: 1.15fr 0.8fr 1.15fr;
-  border-left: 1px solid #222;
-  border-right: 1px solid #222;
-  border-bottom: 1px solid #222;
+  grid-template-columns: 1.25fr 0.8fr 1.2fr;
 }
 
 .bank-details,
 .terms-details,
 .certification-details {
-  min-height: 30mm;
+  min-height: 100px;
+  box-sizing: border-box;
 }
 
 .bank-details,
 .terms-details {
-  border-right: 1px solid #222;
+  border-right: 1px solid #000;
 }
 
 .bottom-heading {
-  min-height: 9mm;
-  padding: 3px;
+  min-height: 30px;
+  padding: 4px;
   box-sizing: border-box;
   display: flex;
   align-items: center;
   justify-content: center;
   text-align: center;
-  border-bottom: 1px solid #222;
-  font-weight: bold;
+  border-bottom: 1px solid #000;
+  font-weight: 700;
+  background: #fbfbfb;
+  color: #000;
 }
 
 .bottom-content {
-  padding: 8px;
+  padding: 10px;
   text-align: center;
-  line-height: 1.6;
+  line-height: 1.5;
+  color: #000;
 }
 
 .authorized-name {
-  margin-top: 8mm;
-  padding: 5px;
+  padding: 8px;
   text-align: center;
-  font-weight: bold;
+  font-weight: 700;
+  color: #000;
+}
+
+
+/* =========================================================
+   PAYMENT SUMMARY (SCREEN ONLY)
+========================================================= */
+
+.payment-summary {
+  margin: 15px;
+  padding: 12px;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 6px;
+}
+
+.payment-summary-title {
+  font-size: 12px;
+  font-weight: 700;
+  margin-bottom: 8px;
+  color: #334155;
+}
+
+.payment-summary-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 10px;
+}
+
+.payment-summary-grid div {
+  display: flex;
+  flex-direction: column;
+}
+
+.payment-summary-grid span {
+  font-size: 10px;
+  color: #64748b;
+}
+
+.payment-summary-grid strong {
+  font-size: 12px;
+  font-weight: 700;
+  color: #0f172a;
 }
 
 
@@ -668,9 +710,10 @@
 ========================================================= */
 
 .invoice-footer {
-  padding-top: 5mm;
+  padding: 10px 0;
   text-align: center;
-  font-size: 8px;
+  font-size: 9px;
+  color: #64748b;
 }
 
 
@@ -711,9 +754,31 @@
   }
 
   .invoice-page {
-    width: 210mm;
+    width: 100%;
   }
 
+  .amount-summary {
+    grid-template-columns: 1fr;
+  }
+
+  .amount-right {
+    border-left: none;
+    border-top: 1px solid #000;
+  }
+
+  .bottom-three-columns {
+    grid-template-columns: 1fr;
+  }
+
+  .bank-details,
+  .terms-details {
+    border-right: none;
+    border-bottom: 1px solid #000;
+  }
+
+  .payment-summary-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
 }
 
 
@@ -728,12 +793,21 @@
     margin: 5mm;
   }
 
+  * {
+    box-shadow: none !important;
+  }
+
   html,
   body {
     margin: 0 !important;
     padding: 0 !important;
     background: #fff !important;
     width: 100% !important;
+  }
+
+  body {
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
   }
 
   body * {
@@ -777,6 +851,7 @@
     max-height: 280mm !important;
     margin: 0 !important;
     padding: 0 !important;
+    border: 1px solid #222 !important;
     box-sizing: border-box !important;
     page-break-after: avoid !important;
     page-break-inside: avoid !important;
@@ -789,7 +864,7 @@
     padding: 4px 8px !important;
   }
 
-  .company-header .company-name {
+  .company-name {
     font-size: 16px !important;
   }
 
@@ -800,103 +875,46 @@
 
   .bill-title {
     height: 24px !important;
-    font-size: 13px !important;
-  }
-
-  .invoice-information {
-    min-height: 38px !important;
-    padding: 4px 8px !important;
-  }
-
-  .info-line {
-    font-size: 10.5px !important;
-    margin-bottom: 2px !important;
-  }
-
-  .customer-heading-row > div {
-    padding: 4px 8px !important;
-    font-size: 11px !important;
+    font-size: 12px !important;
   }
 
   .customer-box {
-    min-height: 65px !important;
+    min-height: 70px !important;
     padding: 5px 8px !important;
-    font-size: 10px !important;
-    line-height: 1.3 !important;
-  }
-
-  .customer-box .customer-name {
-    font-size: 11.5px !important;
-    margin-bottom: 2px !important;
   }
 
   .product-table th,
   .product-table td {
     padding: 4px 5px !important;
-    font-size: 10px !important;
   }
 
-  .product-code {
-    font-size: 8.5px !important;
-    margin-top: 1px !important;
-  }
-
-  .amount-summary {
-    min-height: 50px !important;
-  }
-
-  .amount-in-words {
+  .amount-words {
+    min-height: 55px !important;
     padding: 6px 8px !important;
-    font-size: 10px !important;
   }
 
-  .amount-in-words p {
-    margin: 3px 0 0 !important;
-    font-size: 10px !important;
-  }
-
-  .tax-breakdown-table th,
-  .tax-breakdown-table td {
-    padding: 3px 6px !important;
-    font-size: 10px !important;
-  }
-
-  .bottom-three-columns > div {
-    min-height: 75px !important;
-    font-size: 9.5px !important;
-  }
-
-  .column-title {
-    min-height: 24px !important;
-    padding: 2px 4px !important;
-    font-size: 10px !important;
-  }
-
-  .column-body {
-    padding: 5px !important;
-    line-height: 1.25 !important;
-    font-size: 9.5px !important;
-  }
-
-  .signature-space {
-    margin-top: 25px !important;
-    font-size: 9.5px !important;
-  }
-
-  .company-header,
-  .invoice-information,
-  .customer-heading-row,
-  .customer-details-row,
-  .product-table,
-  .amount-summary,
   .bottom-three-columns {
-    page-break-inside: avoid !important;
-    break-inside: avoid !important;
+    min-height: 75px !important;
   }
 
-  .product-table tr {
-    page-break-inside: avoid !important;
-    break-inside: avoid !important;
+  .bank-details,
+  .terms-details,
+  .certification-details {
+    min-height: 75px !important;
   }
 
+  .bottom-heading {
+    min-height: 22px !important;
+    font-size: 10px !important;
+  }
+
+  .bottom-content {
+    padding: 4px 6px !important;
+    font-size: 9.5px !important;
+  }
+
+  .authorized-name {
+    padding: 4px !important;
+    font-size: 10px !important;
+  }
 }
