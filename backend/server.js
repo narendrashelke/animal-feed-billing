@@ -166,22 +166,30 @@ app.post('/api/customers', (req, res) => {
       pincode
     } = req.body;
 
-    if (!customer_code || !name) {
+    if (!name || !name.trim()) {
       return res.status(400).json({
-        error: 'Customer code and name are required'
+        error: 'Customer name is required'
       });
     }
+
+    let code = (customer_code && customer_code.trim())
+      ? customer_code.trim()
+      : 'CUST-' + String(Date.now()).slice(-6);
 
     const existing = db.prepare(`
       SELECT id
       FROM customers
       WHERE customer_code = ?
-    `).get(customer_code);
+    `).get(code);
 
     if (existing) {
-      return res.status(409).json({
-        error: 'Customer code already exists'
-      });
+      if (!customer_code || !customer_code.trim()) {
+        code = 'CUST-' + String(Date.now() + Math.floor(Math.random() * 1000)).slice(-6);
+      } else {
+        return res.status(409).json({
+          error: 'Customer code already exists'
+        });
+      }
     }
 
     const result = db.prepare(`
@@ -200,8 +208,8 @@ app.post('/api/customers', (req, res) => {
       )
       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     `).run(
-      customer_code,
-      name,
+      code,
+      name.trim(),
       mobile || '',
       email || '',
       address || '',
@@ -402,22 +410,30 @@ app.post('/api/products', (req, res) => {
       minimum_stock
     } = req.body;
 
-    if (!product_code || !product_name) {
+    if (!product_name || !product_name.trim()) {
       return res.status(400).json({
-        error: 'Product code and product name are required'
+        error: 'Product name is required'
       });
     }
+
+    let code = (product_code && product_code.trim())
+      ? product_code.trim()
+      : 'PROD-' + String(Date.now()).slice(-6);
 
     const existing = db.prepare(`
       SELECT id
       FROM products
       WHERE product_code = ?
-    `).get(product_code);
+    `).get(code);
 
     if (existing) {
-      return res.status(409).json({
-        error: 'Product code already exists'
-      });
+      if (!product_code || !product_code.trim()) {
+        code = 'PROD-' + String(Date.now() + Math.floor(Math.random() * 1000)).slice(-6);
+      } else {
+        return res.status(409).json({
+          error: 'Product code already exists'
+        });
+      }
     }
 
     const result = db.prepare(`
@@ -436,8 +452,8 @@ app.post('/api/products', (req, res) => {
       )
       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     `).run(
-      product_code,
-      product_name,
+      code,
+      product_name.trim(),
       category_id || null,
       hsn_code || '',
       uom || 'Kg',
